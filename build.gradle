@@ -42,7 +42,7 @@ dependencies {
     implementation 'org.yaml:snakeyaml:2.5'
     
     // Testing - JUnit BOM for version management
-    testImplementation platform('org.junit:junit-bom:5.14.3')
+    testImplementation platform('org.junit:junit-bom:6.0.3')
     testImplementation 'org.junit.jupiter:junit-jupiter-api'
     testImplementation 'org.junit.jupiter:junit-jupiter-params'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
