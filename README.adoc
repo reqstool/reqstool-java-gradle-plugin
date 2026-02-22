@@ -139,14 +139,11 @@ gradle assembleRequirements
 
 == Requirements
 
-* Gradle 6.0+ (tested with Gradle 9.3)
-* Java 8+
+* Gradle 9.0+
+* Java 17+
 * A `requirements.yml` file in the dataset directory (default: `./reqstool/`)
 
 == License
 
 MIT License - see link:LICENSE[LICENSE] file for details
 
-== Credits
-
-Based on link:https://github.com/Luftfartsverket/reqstool-java-maven-plugin[reqstool-java-maven-plugin] by Luftfartsverket (LFV).
