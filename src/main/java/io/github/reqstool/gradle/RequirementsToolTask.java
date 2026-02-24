@@ -1,5 +1,4 @@
-// Copyright © LFV
-package se.lfv.reqstool.gradle;
+package io.github.reqstool.gradle;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;

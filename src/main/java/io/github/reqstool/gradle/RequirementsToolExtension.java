@@ -1,12 +1,9 @@
-// Copyright © LFV
-package se.lfv.reqstool.gradle;
+package io.github.reqstool.gradle;
 
 import org.gradle.api.Project;
 import org.gradle.api.file.RegularFileProperty;
 import org.gradle.api.provider.ListProperty;
 import org.gradle.api.provider.Property;
-
-import java.io.File;
 
 /**
  * Extension for configuring the Reqstool Gradle Plugin. Provides zero-configuration

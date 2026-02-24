@@ -4,12 +4,12 @@ requirement_annotations:
   tests:
     SVC_001:
       - elementKind: "CLASS"
-        fullyQualifiedName: "se.lfv.reqstool.annotations.SVCsExample"
+        fullyQualifiedName: "io.github.reqstool.annotations.SVCsExample"
     SVC_002:
       - elementKind: "CLASS"
-        fullyQualifiedName: "se.lfv.reqstool.annotations.SVCsExample"
+        fullyQualifiedName: "io.github.reqstool.annotations.SVCsExample"
     SVC_003:
       - elementKind: "CLASS"
-        fullyQualifiedName: "se.lfv.reqstool.annotations.SVCsExample"
+        fullyQualifiedName: "io.github.reqstool.annotations.SVCsExample"
       - elementKind: "METHOD"
-        fullyQualifiedName: "se.lfv.reqstool.annotations.SVCsExample.someMethod"
+        fullyQualifiedName: "io.github.reqstool.annotations.SVCsExample.someMethod"
