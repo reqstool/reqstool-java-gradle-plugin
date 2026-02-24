@@ -33,7 +33,7 @@ class RequirementsToolTaskTest {
 	void setup() {
 		project = ProjectBuilder.builder().withProjectDir(tempDir.toFile()).build();
 
-		task = project.getTasks().create("testTask", RequirementsToolTask.class);
+		task = project.getTasks().register("testTask", RequirementsToolTask.class).get();
 	}
 
 	@Test

@@ -49,6 +49,10 @@ dependencies {
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
+javadoc {
+    options.addStringOption('Xdoclint:none', '-quiet')
+}
+
 test {
     useJUnitPlatform()
 }
