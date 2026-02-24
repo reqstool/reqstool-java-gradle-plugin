@@ -41,7 +41,7 @@ public class RequirementsToolPlugin implements Plugin<Project> {
 				// Configure ZIP output file
 				String archiveBaseName = project.hasProperty("archivesBaseName")
 						? String.valueOf(project.property("archivesBaseName")) : project.getName();
-				String zipFileName = archiveBaseName + "-reqstool.zip";
+				String zipFileName = archiveBaseName + "-" + project.getVersion() + "-reqstool.zip";
 				task.getZipFile()
 					.set(extension.getOutputDirectory()
 						.map(dir -> project.getLayout()
