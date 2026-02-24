@@ -1,5 +1,4 @@
-// Copyright © LFV
-package se.lfv.reqstool.gradle;
+package io.github.reqstool.gradle;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -257,8 +256,8 @@ public class RequirementsToolTask extends DefaultTask {
 	}
 
 	private void assembleZipArtifact() throws IOException {
-		String zipArtifactFilename = projectName.get() + "-reqstool.zip";
-		String topLevelDir = projectName.get() + "-reqstool";
+		String zipArtifactFilename = projectName.get() + "-" + projectVersion.get() + "-reqstool.zip";
+		String topLevelDir = projectName.get() + "-" + projectVersion.get() + "-reqstool";
 
 		File zipFileOutput = zipFile.get().getAsFile();
 		File outDir = zipFileOutput.getParentFile();

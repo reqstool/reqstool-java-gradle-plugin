@@ -1,10 +1,8 @@
 // Copyright © LFV
-package se.lfv.reqstool.gradle;
+package io.github.reqstool.gradle;
 
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
-import org.gradle.api.Task;
-import org.gradle.api.artifacts.Configuration;
 import org.gradle.api.publish.PublishingExtension;
 import org.gradle.api.publish.maven.MavenPublication;
 import org.gradle.api.tasks.TaskProvider;
@@ -43,7 +41,7 @@ public class RequirementsToolPlugin implements Plugin<Project> {
 				// Configure ZIP output file
 				String archiveBaseName = project.hasProperty("archivesBaseName")
 						? String.valueOf(project.property("archivesBaseName")) : project.getName();
-				String zipFileName = archiveBaseName + "-reqstool.zip";
+				String zipFileName = archiveBaseName + "-" + project.getVersion() + "-reqstool.zip";
 				task.getZipFile()
 					.set(extension.getOutputDirectory()
 						.map(dir -> project.getLayout()

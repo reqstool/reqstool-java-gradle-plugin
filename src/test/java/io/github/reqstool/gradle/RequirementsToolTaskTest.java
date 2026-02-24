@@ -1,21 +1,24 @@
-// Copyright © LFV
-package se.lfv.reqstool.gradle;
+package io.github.reqstool.gradle;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+
 import org.gradle.api.Project;
 import org.gradle.testfixtures.ProjectBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-
-import static org.junit.jupiter.api.Assertions.*;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
 class RequirementsToolTaskTest {
 
@@ -30,7 +33,7 @@ class RequirementsToolTaskTest {
 	void setup() {
 		project = ProjectBuilder.builder().withProjectDir(tempDir.toFile()).build();
 
-		task = project.getTasks().create("testTask", RequirementsToolTask.class);
+		task = project.getTasks().register("testTask", RequirementsToolTask.class).get();
 	}
 
 	@Test

@@ -23,7 +23,7 @@ toc::[]
 [source,gradle]
 ----
 plugins {
-    id 'se.lfv.reqstool' version '1.0.0'
+    id 'io.github.reqstool' version '0.2.0'
 }
 ----
 
@@ -104,7 +104,7 @@ When the `maven-publish` plugin is applied, the reqstool ZIP is automatically re
 [source,gradle]
 ----
 plugins {
-    id 'se.lfv.reqstool' version '1.0.0'
+    id 'io.github.reqstool' version '0.2.0'
     id 'maven-publish'
 }
 
