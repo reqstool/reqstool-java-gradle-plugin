@@ -7,7 +7,7 @@ plugins {
 }
 
 group = 'io.github.reqstool'
-version = '0.2.0'
+version = '0.1.0'
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
@@ -24,7 +24,7 @@ gradlePlugin {
 
     plugins {
         reqstoolPlugin {
-            id = 'io.github.reqstool'
+            id = 'io.github.reqstool.gradle-plugin'
             implementationClass = 'io.github.reqstool.gradle.RequirementsToolPlugin'
             displayName = 'Reqstool Gradle Plugin'
             description = 'Gradle plugin for assembling and attaching reqstool ZIP artifacts'
@@ -50,7 +50,7 @@ dependencies {
 }
 
 javadoc {
-    options.addStringOption('Xdoclint:none', '-quiet')
+    options.addBooleanOption('Xdoclint:all', true)
 }
 
 test {

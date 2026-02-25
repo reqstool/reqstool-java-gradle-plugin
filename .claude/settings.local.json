@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git checkout:*)",
+      "Bash(./gradlew clean:*)",
+      "Bash(git add:*)",
+      "Bash(./gradlew publishToMavenLocal:*)",
+      "Bash(gradle build:*)",
+      "Bash(unzip:*)",
+      "Bash(gradle clean:*)",
+      "Bash(git:*)",
+      "Bash(GIT_SEQUENCE_EDITOR=\"/tmp/reword_all.sh\" GIT_EDITOR=\"/tmp/strip_coauthor.sh\" git:*)",
+      "Bash(gh pr:*)",
+      "Bash(gh issue:*)",
+      "Bash(ls:*)",
+      "WebFetch(domain:github.com)"
+    ]
+  }
+}

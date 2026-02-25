@@ -13,6 +13,12 @@ import org.gradle.api.tasks.TaskProvider;
  */
 public class RequirementsToolPlugin implements Plugin<Project> {
 
+	/**
+	 * Applies the plugin to a Gradle project. Registers the {@code assembleRequirements}
+	 * task and automatically configures Maven publishing if the {@code maven-publish}
+	 * plugin is applied.
+	 * @param project the Gradle project
+	 */
 	@Override
 	public void apply(Project project) {
 		// Create extension for configuration
@@ -55,6 +61,12 @@ public class RequirementsToolPlugin implements Plugin<Project> {
 		});
 	}
 
+	/**
+	 * Configures Maven publishing to automatically attach the reqstool ZIP artifact to
+	 * the publication.
+	 * @param project the Gradle project
+	 * @param assembleTask provider for the assembleRequirements task
+	 */
 	private void configureMavenPublishing(Project project, TaskProvider<RequirementsToolTask> assembleTask) {
 		PublishingExtension publishing = project.getExtensions().getByType(PublishingExtension.class);
 
