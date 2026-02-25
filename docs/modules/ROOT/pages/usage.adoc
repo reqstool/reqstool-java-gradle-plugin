@@ -1,0 +1,66 @@
+== Usage
+
+To use the Reqstool Gradle Plugin, add the following configuration to your Gradle project's `build.gradle`:
+
+=== Basic Usage
+
+[source,gradle]
+----
+plugins {
+    id 'io.github.reqstool.gradle-plugin' version '0.1.0'
+}
+----
+
+The plugin will automatically integrate with the standard Gradle build lifecycle.
+
+=== Using Tasks Manually
+
+The main task can be invoked manually:
+
+[source,bash]
+----
+gradle assembleRequirements
+----
+
+=== With Maven Publishing
+
+When the `maven-publish` plugin is applied, the reqstool ZIP is automatically registered for publication:
+
+[source,gradle]
+----
+plugins {
+    id 'io.github.reqstool.gradle-plugin' version '0.1.0'
+    id 'maven-publish'
+}
+
+publishing {
+    repositories {
+        maven {
+            url = "https://your-repo.example.com/maven"
+        }
+    }
+}
+----
+
+The ZIP artifact will be published with classifier `reqstool` (e.g., `my-app-1.0.0-reqstool.zip`).
+
+=== Available Tasks
+
+==== assembleRequirements
+
+Main task that:
+
+* Depends on `check` task (ensures tests have run)
+* Combines annotation files
+* Assembles ZIP artifact
+* Runs automatically as part of `build` task
+
+=== Default Lifecycle
+
+The plugin automatically integrates into the standard Gradle build:
+
+1. Plugin is applied
+2. `assembleRequirements` task is created and configured
+3. Task runs after `check` (when all tests complete)
+4. ZIP artifact is created in `build/reqstool/`
+5. If `maven-publish` plugin is applied, artifact is registered for publication

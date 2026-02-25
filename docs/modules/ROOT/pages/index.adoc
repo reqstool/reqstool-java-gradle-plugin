@@ -1,0 +1,9 @@
+= Reqstool Gradle Plugin
+
+include::description.adoc[]
+
+include::configuration.adoc[]
+
+include::usage.adoc[]
+
+include::license.adoc[]
