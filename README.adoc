@@ -4,7 +4,7 @@
 
 image:https://img.shields.io/badge/License-MIT-blue.svg[License,link=LICENSE]
 
-Gradle plugin for assembling and attaching reqstool ZIP artifacts. This plugin mimics the behavior of the link:https://github.com/Luftfartsverket/reqstool-java-maven-plugin[reqstool-java-maven-plugin].
+Gradle plugin for assembling and attaching reqstool ZIP artifacts.
 
 toc::[]
 
