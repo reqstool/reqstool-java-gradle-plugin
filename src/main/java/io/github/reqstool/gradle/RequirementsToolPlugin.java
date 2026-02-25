@@ -62,8 +62,8 @@ public class RequirementsToolPlugin implements Plugin<Project> {
 	}
 
 	/**
-	 * Configures Maven publishing to automatically attach the reqstool ZIP artifact
-	 * to the publication.
+	 * Configures Maven publishing to automatically attach the reqstool ZIP artifact to
+	 * the publication.
 	 * @param project the Gradle project
 	 * @param assembleTask provider for the assembleRequirements task
 	 */

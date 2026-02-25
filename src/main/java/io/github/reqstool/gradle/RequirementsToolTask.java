@@ -284,7 +284,8 @@ public class RequirementsToolTask extends DefaultTask {
 	}
 
 	/**
-	 * Combines implementations and tests nodes into a single requirement annotations node.
+	 * Combines implementations and tests nodes into a single requirement annotations
+	 * node.
 	 * @param implementationsNode node containing requirement implementations
 	 * @param testsNode node containing test cases
 	 * @return combined requirement annotations node
