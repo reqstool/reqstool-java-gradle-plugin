@@ -109,75 +109,132 @@ public class RequirementsToolTask extends DefaultTask {
 
 	private final RegularFileProperty zipFile = getProject().getObjects().fileProperty();
 
+	/**
+	 * Returns the path to the requirements annotations YAML file.
+	 * @return file property for requirements annotations
+	 */
 	@Optional
 	@InputFile
 	public RegularFileProperty getRequirementsAnnotationsFile() {
 		return requirementsAnnotationsFile;
 	}
 
+	/**
+	 * Returns the path to the SVCs (Software Verification Cases) annotations YAML file.
+	 * @return file property for SVCs annotations
+	 */
 	@Optional
 	@InputFile
 	public RegularFileProperty getSvcsAnnotationsFile() {
 		return svcsAnnotationsFile;
 	}
 
+	/**
+	 * Returns the absolute path to the output directory.
+	 * @return output directory path as a string
+	 */
 	@Input
 	public String getOutputDirectoryPath() {
 		File outDir = outputDirectory.getAsFile().getOrNull();
 		return outDir != null ? outDir.getAbsolutePath() : "";
 	}
 
+	/**
+	 * Returns the output directory file property.
+	 * @return file property for the output directory
+	 */
 	@Internal
 	public RegularFileProperty getOutputDirectory() {
 		return outputDirectory;
 	}
 
+	/**
+	 * Returns the dataset directory containing requirements and supporting files.
+	 * @return file property for the dataset directory
+	 */
 	@InputDirectory
 	@Optional
 	public RegularFileProperty getDatasetPath() {
 		return datasetPath;
 	}
 
+	/**
+	 * Returns the list of test result file glob patterns.
+	 * @return list property of test result patterns
+	 */
 	@Input
 	public ListProperty<String> getTestResults() {
 		return testResults;
 	}
 
+	/**
+	 * Returns whether this task execution should be skipped.
+	 * @return boolean property
+	 */
 	@Input
 	public Property<Boolean> getSkip() {
 		return skip;
 	}
 
+	/**
+	 * Returns whether ZIP artifact assembly should be skipped.
+	 * @return boolean property
+	 */
 	@Input
 	public Property<Boolean> getSkipAssembleZipArtifact() {
 		return skipAssembleZipArtifact;
 	}
 
+	/**
+	 * Returns whether artifact attachment should be skipped.
+	 * @return boolean property
+	 */
 	@Input
 	public Property<Boolean> getSkipAttachZipArtifact() {
 		return skipAttachZipArtifact;
 	}
 
+	/**
+	 * Returns the name of the project being built.
+	 * @return project name property
+	 */
 	@Input
 	public Property<String> getProjectName() {
 		return projectName;
 	}
 
+	/**
+	 * Returns the version of the project being built.
+	 * @return project version property
+	 */
 	@Input
 	public Property<String> getProjectVersion() {
 		return projectVersion;
 	}
 
+	/**
+	 * Returns the base directory of the project.
+	 * @return project base directory property
+	 */
 	@Input
 	public Property<File> getProjectBasedir() {
 		return projectBasedir;
 	}
 
+	/**
+	 * Returns the path where the reqstool ZIP artifact will be written.
+	 * @return file property for the ZIP artifact
+	 */
 	@OutputFile
 	public RegularFileProperty getZipFile() {
 		return zipFile;
 	}
 
+	/**
+	 * Executes the task. Combines requirements and test annotations into a single
+	 * annotations file, and optionally assembles a ZIP artifact containing requirements,
+	 * annotations, and test results.
+	 */
 	@TaskAction
 	public void execute() {
 		if (skip.get()) {
@@ -226,6 +283,12 @@ public class RequirementsToolTask extends DefaultTask {
 		}
 	}
 
+	/**
+	 * Combines implementations and tests nodes into a single requirement annotations node.
+	 * @param implementationsNode node containing requirement implementations
+	 * @param testsNode node containing test cases
+	 * @return combined requirement annotations node
+	 */
 	static JsonNode combineOutput(JsonNode implementationsNode, JsonNode testsNode) {
 		ObjectNode requirementAnnotationsNode = yamlMapper.createObjectNode();
 		if (!implementationsNode.isEmpty()) {
@@ -241,6 +304,12 @@ public class RequirementsToolTask extends DefaultTask {
 		return newNode;
 	}
 
+	/**
+	 * Writes the combined annotations to a YAML file with language server schema hints.
+	 * @param outputFile the file to write to
+	 * @param combinedOutputNode the combined annotations node
+	 * @throws IOException if writing fails
+	 */
 	private void writeCombinedOutputToFile(File outputFile, JsonNode combinedOutputNode) throws IOException {
 		File reqAnnotFile = requirementsAnnotationsFile.getAsFile().getOrNull();
 		File svcsAnnotFile = svcsAnnotationsFile.getAsFile().getOrNull();
@@ -255,6 +324,11 @@ public class RequirementsToolTask extends DefaultTask {
 		}
 	}
 
+	/**
+	 * Assembles the reqstool ZIP artifact containing requirements, annotations, and test
+	 * results.
+	 * @throws IOException if ZIP creation or file reading fails
+	 */
 	private void assembleZipArtifact() throws IOException {
 		String zipArtifactFilename = projectName.get() + "-" + projectVersion.get() + "-reqstool.zip";
 		String topLevelDir = projectName.get() + "-" + projectVersion.get() + "-reqstool";
@@ -340,6 +414,13 @@ public class RequirementsToolTask extends DefaultTask {
 		getLogger().info("Assembled zip artifact: " + zipFileOutput.getAbsolutePath());
 	}
 
+	/**
+	 * Adds a file to the ZIP artifact at the specified target directory.
+	 * @param zipOut the ZIP output stream
+	 * @param file the file to add
+	 * @param targetDirectory the target directory within the ZIP
+	 * @throws IOException if reading the file or writing to ZIP fails
+	 */
 	private void addFileToZipArtifact(ZipOutputStream zipOut, File file, File targetDirectory) throws IOException {
 		if (file.exists()) {
 			File entryName;
@@ -362,6 +443,13 @@ public class RequirementsToolTask extends DefaultTask {
 		}
 	}
 
+	/**
+	 * Creates and adds the reqstool_config.yml file to the ZIP artifact.
+	 * @param zipOut the ZIP output stream
+	 * @param topLevelDir the top-level directory within the ZIP
+	 * @param reqstoolConfigResources map of resource files included in the artifact
+	 * @throws IOException if writing to ZIP fails
+	 */
 	private void addReqstoolConfigYamlToZip(ZipOutputStream zipOut, File topLevelDir,
 			Map<String, Object> reqstoolConfigResources) throws IOException {
 		DumperOptions options = new DumperOptions();

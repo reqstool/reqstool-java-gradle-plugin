@@ -50,7 +50,7 @@ dependencies {
 }
 
 javadoc {
-    options.addStringOption('Xdoclint:none', '-quiet')
+    options.addBooleanOption('Xdoclint:all', true)
 }
 
 test {
