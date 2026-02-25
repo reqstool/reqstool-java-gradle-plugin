@@ -1,0 +1,7 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/asciidoctor/asciidoctor-intellij-plugin/main/src/main/resources/jsonSchemas/antoraComponentSchema.json
+
+name: reqstool-java-gradle-plugin
+title: Reqstool Gradle Plugin
+version: 0.1.0
+nav:
+  - modules/ROOT/nav.adoc

@@ -1,0 +1,146 @@
+== Configuration
+
+The plugin provides zero-configuration defaults, but you can customize if needed:
+
+=== Complete Configuration Example
+
+[source,gradle]
+----
+requirementsTool {
+    // Path to requirements annotations YAML
+    // Default: build/generated-sources/annotations/resources/annotations.yml
+    requirementsAnnotationsFile = file('build/custom-path/annotations.yml')
+
+    // Path to SVCS annotations YAML
+    // Default: build/generated-test-sources/test-annotations/resources/annotations.yml
+    svcsAnnotationsFile = file('build/custom-path/test-annotations.yml')
+
+    // Output directory for ZIP and combined annotations
+    // Default: build/reqstool
+    outputDirectory = file('build/custom-output')
+
+    // Dataset directory containing requirements.yml and optional files
+    // Default: ./reqstool
+    datasetPath = file('custom-reqstool-data')
+
+    // Test result file patterns
+    // Default: ['build/test-results/**/*.xml']
+    testResults = ['build/test-results/**/*.xml', 'build/custom-tests/**/*.xml']
+
+    // Skip entire plugin execution
+    // Default: false
+    skip = false
+
+    // Skip ZIP assembly but keep annotation combining
+    // Default: false
+    skipAssembleZipArtifact = false
+
+    // Skip artifact attachment for publishing
+    // Default: false
+    skipAttachZipArtifact = false
+}
+----
+
+=== Configuration Parameters
+
+==== requirementsAnnotationsFile
+
+The `requirementsAnnotationsFile` parameter specifies the path to the requirements annotations file.
+Defaults to the value set below.
+
+[source,gradle]
+----
+requirementsTool {
+    requirementsAnnotationsFile = file('build/generated-sources/annotations/resources/annotations.yml')
+}
+----
+
+==== svcsAnnotationsFile
+
+The `svcsAnnotationsFile` parameter specifies the path to the SVCS (Software Verification Cases) annotations file.
+Defaults to the value set below.
+
+[source,gradle]
+----
+requirementsTool {
+    svcsAnnotationsFile = file('build/generated-test-sources/test-annotations/resources/annotations.yml')
+}
+----
+
+==== outputDirectory
+
+The `outputDirectory` parameter specifies the path to where to put the generated output.
+Defaults to the value set below.
+
+[source,gradle]
+----
+requirementsTool {
+    outputDirectory = file('build/reqstool')
+}
+----
+
+==== datasetPath
+
+The `datasetPath` parameter specifies the path to the dataset directory containing requirements.yml and optional files.
+Defaults to the value set below.
+
+[source,gradle]
+----
+requirementsTool {
+    datasetPath = file('./reqstool')
+}
+----
+
+==== testResults
+
+The `testResults` parameter specifies one or more test result file patterns.
+Supports Ant-style pattern matching.
+
+[source,gradle]
+----
+requirementsTool {
+    testResults = ['build/test-results/**/*.xml', 'build/custom-tests/**/*.xml']
+}
+----
+
+==== skip
+
+Skip the execution of the entire plugin.
+Defaults to the value set below.
+
+[source,gradle]
+----
+requirementsTool {
+    skip = false
+}
+----
+
+==== skipAssembleZipArtifact
+
+Skip ZIP artifact assembly but continue with annotation combining.
+Defaults to the value set below.
+
+[source,gradle]
+----
+requirementsTool {
+    skipAssembleZipArtifact = false
+}
+----
+
+==== skipAttachZipArtifact
+
+Skip artifact attachment for publishing.
+Defaults to the value set below.
+
+[source,gradle]
+----
+requirementsTool {
+    skipAttachZipArtifact = false
+}
+----
+
+=== Notes
+
+* All path parameters support both absolute and relative paths
+* The plugin executes after the `check` task by default
+* Test result paths support Ant-style pattern matching
