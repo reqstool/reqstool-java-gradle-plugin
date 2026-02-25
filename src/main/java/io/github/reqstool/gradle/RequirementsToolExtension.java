@@ -27,6 +27,11 @@ public class RequirementsToolExtension {
 
 	private final Property<Boolean> skipAttachZipArtifact;
 
+	/**
+	 * Constructs a RequirementsToolExtension with default configuration values.
+	 * Initializes all properties with sensible defaults matching Maven plugin behavior.
+	 * @param project the Gradle project
+	 */
 	public RequirementsToolExtension(Project project) {
 		this.requirementsAnnotationsFile = project.getObjects().fileProperty();
 		this.svcsAnnotationsFile = project.getObjects().fileProperty();

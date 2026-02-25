@@ -14,6 +14,12 @@ import org.gradle.api.tasks.TaskProvider;
 public class RequirementsToolPlugin implements Plugin<Project> {
 
 	/**
+	 * Default constructor for RequirementsToolPlugin.
+	 */
+	public RequirementsToolPlugin() {
+	}
+
+	/**
 	 * Applies the plugin to a Gradle project. Registers the {@code assembleRequirements}
 	 * task and automatically configures Maven publishing if the {@code maven-publish}
 	 * plugin is applied.

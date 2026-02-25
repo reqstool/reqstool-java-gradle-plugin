@@ -56,26 +56,37 @@ public class RequirementsToolTask extends DefaultTask {
 	// Constants matching Maven plugin
 	private static final String[] OUTPUT_ARTIFACT_TEST_RESULTS_PATTERN = { "test_results/**/*.xml" };
 
+	/** Filename for manual verification results YAML input file. */
 	public static final String INPUT_FILE_MANUAL_VERIFICATION_RESULTS_YML = "manual_verification_results.yml";
 
+	/** Filename for requirements YAML input file. */
 	public static final String INPUT_FILE_REQUIREMENTS_YML = "requirements.yml";
 
+	/** Filename for software verification cases YAML input file. */
 	public static final String INPUT_FILE_SOFTWARE_VERIFICATION_CASES_YML = "software_verification_cases.yml";
 
+	/** Filename for combined annotations YAML output file. */
 	public static final String OUTPUT_FILE_ANNOTATIONS_YML_FILE = "annotations.yml";
 
+	/** Filename for reqstool configuration YAML file. */
 	public static final String OUTPUT_ARTIFACT_FILE_REQSTOOL_CONFIG_YML = "reqstool_config.yml";
 
+	/** Directory name for test results within the ZIP artifact. */
 	public static final String OUTPUT_ARTIFACT_DIR_TEST_RESULTS = "test_results";
 
+	/** XML element name for requirement implementations. */
 	public static final String XML_IMPLEMENTATIONS = "implementations";
 
+	/** XML element name for requirement annotations. */
 	public static final String XML_REQUIREMENT_ANNOTATIONS = "requirement_annotations";
 
+	/** XML element name for tests. */
 	public static final String XML_TESTS = "tests";
 
+	/** YAML language server schema hint for annotations files. */
 	protected static final String YAML_LANG_SERVER_SCHEMA_ANNOTATIONS = "# yaml-language-server: $schema=https://raw.githubusercontent.com/Luftfartsverket/reqstool-client/main/src/reqstool/resources/schemas/v1/annotations.schema.json";
 
+	/** YAML language server schema hint for reqstool config files. */
 	protected static final String YAML_LANG_SERVER_SCHEMA_CONFIG = "# yaml-language-server: $schema=https://raw.githubusercontent.com/Luftfartsverket/reqstool-client/main/src/reqstool/resources/schemas/v1/reqstool_config.schema.json";
 
 	private static final ObjectMapper yamlMapper;
@@ -108,6 +119,12 @@ public class RequirementsToolTask extends DefaultTask {
 	private final Property<File> projectBasedir = getProject().getObjects().property(File.class);
 
 	private final RegularFileProperty zipFile = getProject().getObjects().fileProperty();
+
+	/**
+	 * Default constructor for RequirementsToolTask.
+	 */
+	public RequirementsToolTask() {
+	}
 
 	/**
 	 * Returns the path to the requirements annotations YAML file.
