@@ -19,7 +19,7 @@ repositories {
 }
 
 gradlePlugin {
-    website = 'https://github.com/reqstool/reqstool-java-gradle-plugin'
+    website = 'https://reqstool.github.io'
     vcsUrl = 'https://github.com/reqstool/reqstool-java-gradle-plugin.git'
 
     plugins {
@@ -47,10 +47,6 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-params'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-}
-
-javadoc {
-    options.addBooleanOption('Xdoclint:all', true)
 }
 
 test {
