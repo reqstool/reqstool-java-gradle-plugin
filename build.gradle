@@ -52,3 +52,19 @@ dependencies {
 test {
     useJUnitPlatform()
 }
+
+publishing {
+    publications {
+        withType(MavenPublication) {
+            pom {
+                developers {
+                    developer {
+                        name = 'Reqstool Contributors'
+                        organization = 'reqstool'
+                        organizationUrl = 'https://github.com/reqstool'
+                    }
+                }
+            }
+        }
+    }
+}
