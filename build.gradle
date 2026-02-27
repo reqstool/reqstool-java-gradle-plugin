@@ -19,7 +19,7 @@ repositories {
 }
 
 gradlePlugin {
-    website = 'https://github.com/reqstool/reqstool-java-gradle-plugin'
+    website = 'https://reqstool.github.io'
     vcsUrl = 'https://github.com/reqstool/reqstool-java-gradle-plugin.git'
 
     plugins {
@@ -49,10 +49,22 @@ dependencies {
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
-javadoc {
-    options.addBooleanOption('Xdoclint:all', true)
-}
-
 test {
     useJUnitPlatform()
+}
+
+publishing {
+    publications {
+        withType(MavenPublication) {
+            pom {
+                developers {
+                    developer {
+                        name = 'Reqstool Contributors'
+                        organization = 'reqstool'
+                        organizationUrl = 'https://github.com/reqstool'
+                    }
+                }
+            }
+        }
+    }
 }
