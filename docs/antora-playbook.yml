@@ -2,7 +2,7 @@
 
 site:
   title: Reqstool Gradle Plugin
-  url: https://github.com/reqstool/reqstool-java-gradle-plugin
+  url: https://reqstool.github.io/reqstool-java-gradle-plugin
   start_page: reqstool-java-gradle-plugin::index.adoc
 
 content:

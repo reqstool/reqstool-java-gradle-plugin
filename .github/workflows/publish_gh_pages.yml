@@ -1,8 +1,6 @@
 name: Publish to GitHub Pages
 on:
   workflow_dispatch:
-  release:
-    types: [created]
   push:
     branches:
       - main
@@ -34,10 +32,10 @@ jobs:
         run: npm i antora
       - name: Install Asciidoctor Kroki extension
         run: npm i asciidoctor asciidoctor-kroki
-      - name: Generate Site
-        run: npx antora docs/antora-playbook.yml
       - name: Create site folders
         run: mkdir -p docs/build/site
+      - name: Generate Site
+        run: npx antora docs/antora-playbook.yml
       - name: Upload Artifacts
         uses: actions/upload-pages-artifact@v4
         with:
