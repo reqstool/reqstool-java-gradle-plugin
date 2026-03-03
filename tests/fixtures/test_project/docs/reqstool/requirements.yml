@@ -1,0 +1,15 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/reqstool/reqstool-client/main/src/reqstool/resources/schemas/v1/requirements.schema.json
+
+metadata:
+  urn: mypackage
+  variant: microservice
+  title: Mypackage Requirements
+  url: https://github.com/reqstool/reqstool-java-gradle-plugin
+
+requirements:
+  - id: REQ_001
+    title: Hello function
+    significance: shall
+    description: The hello method shall return "hello".
+    categories: ["functional-suitability"]
+    revision: "0.1.0"
