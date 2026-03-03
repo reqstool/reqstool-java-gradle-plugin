@@ -1,0 +1,44 @@
+plugins {
+    id 'java'
+    id 'io.github.reqstool.gradle-plugin' version '0.1.0'
+}
+
+group = 'io.github.reqstool.example'
+version = '0.1.0'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'io.github.reqstool:reqstool-java-annotations:1.0.0'
+    annotationProcessor 'io.github.reqstool:reqstool-java-annotations:1.0.0'
+
+    testImplementation platform('org.junit:junit-bom:6.0.3')
+    testImplementation 'org.junit.jupiter:junit-jupiter-api'
+    testAnnotationProcessor 'io.github.reqstool:reqstool-java-annotations:1.0.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+requirementsTool {
+    datasetPath = file('docs/reqstool')
+    testResults = ['build/test-results/**/*.xml']
+}
+
+tasks.named('build') {
+    finalizedBy tasks.named('assembleRequirements')
+}
+
+tasks.named('assembleRequirements') {
+    dependsOn tasks.named('test')
+}
