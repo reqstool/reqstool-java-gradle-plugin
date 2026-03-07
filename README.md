@@ -10,7 +10,7 @@ Gradle build plugin for [reqstool](https://github.com/reqstool/reqstool-client) 
 
 ## Overview
 
-Collects `@Requirements` and `@SVCs` annotations from compiled Java code, combines them with test results, and packages everything into a ZIP artifact for analysis by the reqstool CLI. Supports Java 17+.
+Collects `@Requirements` and `@SVCs` annotations from compiled Java code, combines them with test results, and packages everything into a ZIP artifact for analysis by the reqstool CLI. Supports Java 21+.
 
 ## Installation
 

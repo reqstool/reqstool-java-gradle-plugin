@@ -54,7 +54,7 @@ Run `gradle build` and the ZIP artifact will be created automatically.
 == Prerequisites
 
 * Gradle 9.0+
-* Java 17+
+* Java 21+
 * A `requirements.yml` file in the dataset directory (default: `./reqstool/`)
 
 == License

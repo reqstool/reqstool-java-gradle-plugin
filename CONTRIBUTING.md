@@ -6,7 +6,7 @@ For DCO sign-off, commit conventions, and code review process, see the organizat
 
 ## Prerequisites
 
-- Java 17+
+- Java 21+
 - Gradle 9.3+ (use the wrapper)
 
 ## Setup
