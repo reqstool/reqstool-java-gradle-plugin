@@ -1,6 +1,6 @@
 == Usage
 
-To use the Reqstool Gradle Plugin, add the following configuration to your Gradle project's `build.gradle`:
+To use the reqstool Gradle Plugin, add the following configuration to your Gradle project's `build.gradle`:
 
 === Basic Usage
 

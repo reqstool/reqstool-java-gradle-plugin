@@ -1,9 +1,0 @@
-image:https://img.shields.io/github/commit-activity/m/reqstool/reqstool-java-gradle-plugin?label=commits&style=for-the-badge["Commit Activity", link="https://github.com/reqstool/reqstool-java-gradle-plugin/pulse"]
-image:https://img.shields.io/github/issues/reqstool/reqstool-java-gradle-plugin?style=for-the-badge&logo=github["GitHub Issues", link="https://github.com/reqstool/reqstool-java-gradle-plugin/issues"]
-image:https://img.shields.io/badge/Java-17-brightgreen.svg?style=for-the-badge["JVM support", link="https://sdkman.io"]
-image:https://img.shields.io/github/license/reqstool/reqstool-java-gradle-plugin?style=for-the-badge&logo=opensourceinitiative["License", link="https://opensource.org/license/mit/"]
-image:https://img.shields.io/github/actions/workflow/status/reqstool/reqstool-java-gradle-plugin/build.yml?style=for-the-badge&logo=github["Build", link="https://github.com/reqstool/reqstool-java-gradle-plugin/actions/workflows/build.yml"]
-image:https://img.shields.io/badge/Documentation-blue?style=for-the-badge&link=docs["Static Badge", link="https://reqstool.github.io/reqstool-java-gradle-plugin/"]
-
-See:
-link:https://github.com/reqstool/reqstool-java-gradle-plugin/blob/main/docs/modules/ROOT/pages/index.adoc[Documentation]
