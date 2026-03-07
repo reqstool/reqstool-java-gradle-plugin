@@ -17,7 +17,10 @@ import org.gradle.api.tasks.InputFile;
 import org.gradle.api.tasks.Internal;
 import org.gradle.api.tasks.Optional;
 import org.gradle.api.tasks.OutputFile;
+import org.gradle.api.tasks.PathSensitive;
+import org.gradle.api.tasks.PathSensitivity;
 import org.gradle.api.tasks.TaskAction;
+import org.gradle.work.DisableCachingByDefault;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 
@@ -51,6 +54,7 @@ import java.util.zip.ZipOutputStream;
  * annotations and creates a ZIP artifact containing requirements, SVCs, test results, and
  * combined annotations.
  */
+@DisableCachingByDefault(because = "Assembles build artifacts — not safe to cache")
 public class RequirementsToolTask extends DefaultTask {
 
 	// Constants matching Maven plugin
@@ -132,6 +136,7 @@ public class RequirementsToolTask extends DefaultTask {
 	 */
 	@Optional
 	@InputFile
+	@PathSensitive(PathSensitivity.NONE)
 	public RegularFileProperty getRequirementsAnnotationsFile() {
 		return requirementsAnnotationsFile;
 	}
@@ -142,6 +147,7 @@ public class RequirementsToolTask extends DefaultTask {
 	 */
 	@Optional
 	@InputFile
+	@PathSensitive(PathSensitivity.NONE)
 	public RegularFileProperty getSvcsAnnotationsFile() {
 		return svcsAnnotationsFile;
 	}
@@ -171,6 +177,7 @@ public class RequirementsToolTask extends DefaultTask {
 	 */
 	@InputDirectory
 	@Optional
+	@PathSensitive(PathSensitivity.NONE)
 	public RegularFileProperty getDatasetPath() {
 		return datasetPath;
 	}
