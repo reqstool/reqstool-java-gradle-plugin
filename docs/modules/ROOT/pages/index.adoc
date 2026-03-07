@@ -1,8 +1,8 @@
-= Reqstool Gradle Plugin
+= reqstool Gradle Plugin
 
-This Gradle plugin generates a ZIP artifact containing combined annotations and various reports for Reqstool. It provides zero-configuration defaults while allowing customization when needed.
+This Gradle plugin generates a ZIP artifact containing combined annotations and various reports for reqstool. It provides zero-configuration defaults while allowing customization when needed.
 
-=== Features
+== Features
 
 * *Zero-configuration*: Works out of the box with sensible defaults
 * *Automatic lifecycle integration*: Runs as part of the standard `build` task
@@ -10,9 +10,9 @@ This Gradle plugin generates a ZIP artifact containing combined annotations and 
 * *Combines annotations*: Merges requirements annotations from implementation and test code
 * *Assembles ZIP artifact*: Creates structured ZIP containing requirements, test results, and configuration
 
-=== Quick Start
+== Quick Start
 
-==== Apply the Plugin
+== Apply the Plugin
 
 [source,gradle]
 ----
@@ -21,7 +21,7 @@ plugins {
 }
 ----
 
-==== Default Behavior
+== Default Behavior
 
 The plugin automatically:
 
@@ -36,7 +36,7 @@ The plugin automatically:
    * `reqstool_config.yml` (configuration manifest)
 4. Registers the ZIP for Maven publication (if `maven-publish` plugin is applied)
 
-==== Minimal Setup
+== Minimal Setup
 
 Create a `reqstool/` directory in your project root with a `requirements.yml` file:
 
@@ -51,7 +51,7 @@ my-project/
 
 Run `gradle build` and the ZIP artifact will be created automatically.
 
-=== Prerequisites
+== Prerequisites
 
 * Gradle 9.0+
 * Java 17+
