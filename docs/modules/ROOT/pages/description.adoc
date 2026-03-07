@@ -51,7 +51,7 @@ my-project/
 
 Run `gradle build` and the ZIP artifact will be created automatically.
 
-=== Requirements
+=== Prerequisites
 
 * Gradle 9.0+
 * Java 17+
