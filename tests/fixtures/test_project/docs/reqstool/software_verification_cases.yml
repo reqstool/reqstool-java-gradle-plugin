@@ -6,3 +6,8 @@ cases:
     title: "Hello method returns hello"
     verification: automated-test
     revision: "0.1.0"
+  - id: SVC_002
+    requirement_ids: ["REQ_001"]
+    title: "Hello method returns hello (integration)"
+    verification: automated-test
+    revision: "0.1.0"
