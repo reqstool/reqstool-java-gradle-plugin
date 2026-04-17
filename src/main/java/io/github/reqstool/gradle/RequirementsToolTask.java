@@ -145,8 +145,8 @@ public class RequirementsToolTask extends DefaultTask {
 	}
 
 	/**
-	 * Returns the collection of SVCs (Software Verification Cases) annotations YAML files,
-	 * one per test source set.
+	 * Returns the collection of SVCs (Software Verification Cases) annotations YAML
+	 * files, one per test source set.
 	 * @return file collection for SVCs annotations
 	 */
 	@InputFiles
