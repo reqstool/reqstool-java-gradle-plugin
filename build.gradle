@@ -11,6 +11,7 @@ scmVersion {
     tag {
         prefix = ''
     }
+    versionCreator 'simple'
 }
 
 group = 'io.github.reqstool'
