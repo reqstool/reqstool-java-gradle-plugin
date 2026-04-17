@@ -39,7 +39,7 @@ public class RequirementsToolPlugin implements Plugin<Project> {
 
 				// Configure task inputs from extension
 				task.getRequirementsAnnotationsFile().set(extension.getRequirementsAnnotationsFile());
-				task.getSvcsAnnotationsFile().set(extension.getSvcsAnnotationsFile());
+				task.getSvcsAnnotationsFiles().setFrom(extension.getSvcsAnnotationsFiles());
 				task.getOutputDirectory().set(extension.getOutputDirectory());
 				task.getDatasetPath().set(extension.getDatasetPath());
 				task.getTestResults().set(extension.getTestResults());

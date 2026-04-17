@@ -3,17 +3,20 @@ package io.github.reqstool.gradle;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.GradleException;
+import org.gradle.api.file.ConfigurableFileCollection;
 import org.gradle.api.file.RegularFileProperty;
 import org.gradle.api.provider.ListProperty;
 import org.gradle.api.provider.Property;
 import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.InputDirectory;
 import org.gradle.api.tasks.InputFile;
+import org.gradle.api.tasks.InputFiles;
 import org.gradle.api.tasks.Internal;
 import org.gradle.api.tasks.Optional;
 import org.gradle.api.tasks.OutputFile;
@@ -102,7 +105,7 @@ public class RequirementsToolTask extends DefaultTask {
 
 	private final RegularFileProperty requirementsAnnotationsFile = getProject().getObjects().fileProperty();
 
-	private final RegularFileProperty svcsAnnotationsFile = getProject().getObjects().fileProperty();
+	private final ConfigurableFileCollection svcsAnnotationsFiles = getProject().getObjects().fileCollection();
 
 	private final RegularFileProperty outputDirectory = getProject().getObjects().fileProperty();
 
@@ -142,14 +145,15 @@ public class RequirementsToolTask extends DefaultTask {
 	}
 
 	/**
-	 * Returns the path to the SVCs (Software Verification Cases) annotations YAML file.
-	 * @return file property for SVCs annotations
+	 * Returns the collection of SVCs (Software Verification Cases) annotations YAML files,
+	 * one per test source set.
+	 * @return file collection for SVCs annotations
 	 */
+	@InputFiles
 	@Optional
-	@InputFile
 	@PathSensitive(PathSensitivity.NONE)
-	public RegularFileProperty getSvcsAnnotationsFile() {
-		return svcsAnnotationsFile;
+	public ConfigurableFileCollection getSvcsAnnotationsFiles() {
+		return svcsAnnotationsFiles;
 	}
 
 	/**
@@ -280,10 +284,16 @@ public class RequirementsToolTask extends DefaultTask {
 					.path(XML_IMPLEMENTATIONS);
 			}
 
-			File svcsAnnotFile = svcsAnnotationsFile.getAsFile().getOrNull();
-			if (svcsAnnotFile != null && svcsAnnotFile.exists()) {
-				testsNode = yamlMapper.readTree(svcsAnnotFile).path(XML_REQUIREMENT_ANNOTATIONS).path(XML_TESTS);
+			ObjectNode mergedTestsNode = yamlMapper.createObjectNode();
+			for (File svcsAnnotFile : svcsAnnotationsFiles.getFiles()) {
+				if (svcsAnnotFile.exists()) {
+					JsonNode fileTestsNode = yamlMapper.readTree(svcsAnnotFile)
+						.path(XML_REQUIREMENT_ANNOTATIONS)
+						.path(XML_TESTS);
+					mergeTestNodes(mergedTestsNode, fileTestsNode);
+				}
 			}
+			testsNode = mergedTestsNode.isEmpty() ? yamlMapper.createObjectNode() : mergedTestsNode;
 
 			JsonNode combinedOutputNode = combineOutput(implementationsNode, testsNode);
 
@@ -330,6 +340,29 @@ public class RequirementsToolTask extends DefaultTask {
 	}
 
 	/**
+	 * Deep-merges source tests node into target. For duplicate SVC keys, concatenates the
+	 * entry arrays; otherwise adds the key.
+	 * @param target the node to merge into
+	 * @param source the node to merge from
+	 */
+	static void mergeTestNodes(ObjectNode target, JsonNode source) {
+		if (!source.isObject()) {
+			return;
+		}
+		source.fields().forEachRemaining(entry -> {
+			String key = entry.getKey();
+			JsonNode incoming = entry.getValue();
+			if (target.has(key) && target.get(key).isArray() && incoming.isArray()) {
+				ArrayNode existing = (ArrayNode) target.get(key);
+				incoming.forEach(existing::add);
+			}
+			else {
+				target.set(key, incoming.deepCopy());
+			}
+		});
+	}
+
+	/**
 	 * Writes the combined annotations to a YAML file with language server schema hints.
 	 * @param outputFile the file to write to
 	 * @param combinedOutputNode the combined annotations node
@@ -337,10 +370,9 @@ public class RequirementsToolTask extends DefaultTask {
 	 */
 	private void writeCombinedOutputToFile(File outputFile, JsonNode combinedOutputNode) throws IOException {
 		File reqAnnotFile = requirementsAnnotationsFile.getAsFile().getOrNull();
-		File svcsAnnotFile = svcsAnnotationsFile.getAsFile().getOrNull();
 
-		getLogger()
-			.info("Combining " + reqAnnotFile + " and " + svcsAnnotFile + " into " + outputFile.getAbsolutePath());
+		getLogger().info("Combining " + reqAnnotFile + " and " + svcsAnnotationsFiles.getFiles() + " into "
+				+ outputFile.getAbsolutePath());
 
 		try (Writer writer = new PrintWriter(
 				new OutputStreamWriter(new FileOutputStream(outputFile), StandardCharsets.UTF_8))) {

@@ -12,22 +12,57 @@ java {
 }
 
 repositories {
+    mavenLocal()
     mavenCentral()
 }
 
 dependencies {
     implementation 'io.github.reqstool:reqstool-java-annotations:1.0.0'
     annotationProcessor 'io.github.reqstool:reqstool-java-annotations:1.0.0'
+    testCompileOnly 'io.github.reqstool:reqstool-java-annotations:1.0.0'
+    testAnnotationProcessor 'io.github.reqstool:reqstool-java-annotations:1.0.0'
 
     testImplementation platform('org.junit:junit-bom:6.0.3')
     testImplementation 'org.junit.jupiter:junit-jupiter-api'
-    testAnnotationProcessor 'io.github.reqstool:reqstool-java-annotations:1.0.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
-test {
-    useJUnitPlatform()
+testing {
+    suites {
+        test {
+            useJUnitJupiter()
+        }
+
+        integrationTest(JvmTestSuite) {
+            sources {
+                java {
+                    srcDirs = ['src/integration-test/java']
+                }
+            }
+            dependencies {
+                implementation project()
+            }
+            targets {
+                all {
+                    testTask.configure {
+                        shouldRunAfter(test)
+                    }
+                }
+            }
+        }
+    }
+}
+
+configurations {
+    integrationTestImplementation.extendsFrom implementation, testImplementation
+    integrationTestCompileOnly.extendsFrom compileOnly, testCompileOnly
+    integrationTestAnnotationProcessor.extendsFrom annotationProcessor, testAnnotationProcessor
+    integrationTestRuntimeOnly.extendsFrom runtimeOnly, testRuntimeOnly
+}
+
+tasks.named('check') {
+    dependsOn(testing.suites.integrationTest)
 }
 
 requirementsTool {
@@ -40,5 +75,5 @@ tasks.named('build') {
 }
 
 tasks.named('assembleRequirements') {
-    dependsOn tasks.named('test')
+    dependsOn test, testing.suites.integrationTest
 }

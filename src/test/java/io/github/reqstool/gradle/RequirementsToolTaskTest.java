@@ -1,6 +1,7 @@
 package io.github.reqstool.gradle;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -9,6 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.List;
 
 import org.gradle.api.Project;
 import org.gradle.testfixtures.ProjectBuilder;
@@ -18,6 +20,7 @@ import org.junit.jupiter.api.io.TempDir;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
 class RequirementsToolTaskTest {
@@ -110,7 +113,7 @@ class RequirementsToolTaskTest {
 			.create("requirementsTool", RequirementsToolExtension.class, project);
 
 		task.getRequirementsAnnotationsFile().set(extension.getRequirementsAnnotationsFile());
-		task.getSvcsAnnotationsFile().set(extension.getSvcsAnnotationsFile());
+		task.getSvcsAnnotationsFiles().setFrom(extension.getSvcsAnnotationsFiles());
 		task.getOutputDirectory().set(extension.getOutputDirectory());
 		task.getDatasetPath().set(extension.getDatasetPath());
 		task.getTestResults().set(extension.getTestResults());
@@ -137,6 +140,32 @@ class RequirementsToolTaskTest {
 
 		// Should not throw exception when skip is true
 		assertDoesNotThrow(() -> task.execute());
+	}
+
+	@Test
+	void testMergeTestNodes_mergesTwoFiles() throws IOException {
+		String yaml1 = "requirement_annotations:\n  tests:\n"
+				+ "    SVC_001:\n      - elementKind: METHOD\n        fullyQualifiedName: pkg.TestA.test1\n"
+				+ "    SVC_002:\n      - elementKind: METHOD\n        fullyQualifiedName: pkg.TestA.test2\n";
+		String yaml2 = "requirement_annotations:\n  tests:\n"
+				+ "    SVC_001:\n      - elementKind: METHOD\n        fullyQualifiedName: pkg.TestB.test3\n"
+				+ "    SVC_003:\n      - elementKind: METHOD\n        fullyQualifiedName: pkg.TestB.test4\n";
+
+		ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
+		File f1 = tempDir.resolve("annot1.yml").toFile();
+		File f2 = tempDir.resolve("annot2.yml").toFile();
+		java.nio.file.Files.writeString(f1.toPath(), yaml1);
+		java.nio.file.Files.writeString(f2.toPath(), yaml2);
+
+		ObjectNode mergedTests = mapper.createObjectNode();
+		for (File f : List.of(f1, f2)) {
+			JsonNode testNode = mapper.readTree(f).path("requirement_annotations").path("tests");
+			RequirementsToolTask.mergeTestNodes(mergedTests, testNode);
+		}
+
+		assertEquals(2, mergedTests.get("SVC_001").size());
+		assertTrue(mergedTests.has("SVC_002"));
+		assertTrue(mergedTests.has("SVC_003"));
 	}
 
 	@Test
