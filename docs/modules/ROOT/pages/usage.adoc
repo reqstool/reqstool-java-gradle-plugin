@@ -1,66 +1,86 @@
-== Usage
+= Usage
 
-To use the reqstool Gradle Plugin, add the following configuration to your Gradle project's `build.gradle`:
+== Basic usage
 
-=== Basic Usage
+Apply the plugin and set `datasetPath` if your dataset directory is not the default `reqstool/`:
 
 [source,gradle]
 ----
 plugins {
-    id 'io.github.reqstool.gradle-plugin' version '0.1.0'
+    id 'io.github.reqstool.gradle-plugin' version '0.1.1'
+}
+
+requirementsTool {
+    datasetPath = file('docs/reqstool')
 }
 ----
 
-The plugin will automatically integrate with the standard Gradle build lifecycle.
+Run a standard build — `assembleRequirements` is wired automatically:
 
-=== Using Tasks Manually
+[source,bash]
+----
+gradle clean build
+----
 
-The main task can be invoked manually:
+== Running the task manually
 
 [source,bash]
 ----
 gradle assembleRequirements
 ----
 
-=== With Maven Publishing
+When invoked directly, `assembleRequirements` still depends on all compile tasks so annotation files are always up to date.
 
-When the `maven-publish` plugin is applied, the reqstool ZIP is automatically registered for publication:
+== With Maven publishing
+
+When the `maven-publish` plugin is applied, the reqstool ZIP is automatically registered for publication with classifier `reqstool`:
 
 [source,gradle]
 ----
 plugins {
-    id 'io.github.reqstool.gradle-plugin' version '0.1.0'
+    id 'io.github.reqstool.gradle-plugin' version '0.1.1'
     id 'maven-publish'
 }
 
 publishing {
     repositories {
         maven {
-            url = "https://your-repo.example.com/maven"
+            url = 'https://your-repo.example.com/maven'
         }
     }
 }
 ----
 
-The ZIP artifact will be published with classifier `reqstool` (e.g., `my-app-1.0.0-reqstool.zip`).
+The artifact is published as `<name>-<version>-reqstool.zip`.
 
-=== Available Tasks
+== Task reference
 
-==== assembleRequirements
+=== assembleRequirements
 
-Main task that:
+Group: `build`
 
-* Depends on `check` task (ensures tests have run)
-* Combines annotation files
-* Assembles ZIP artifact
-* Runs automatically as part of `build` task
+Combines requirements and SVCs annotations from all source sets into a single `annotations.yml`,
+then (unless `skipAssembleZipArtifact` is set) assembles a ZIP artifact at
+`<outputDirectory>/<name>-<version>-reqstool.zip`.
 
-=== Default Lifecycle
+*Auto-wired dependencies* (when the `java` plugin is applied):
 
-The plugin automatically integrates into the standard Gradle build:
+* Depends on `compileJava` (main source set — generates `requirementsAnnotationsFile`)
+* Depends on `compileXxxJava` for each non-main source set (generates entries in `svcsAnnotationsFiles`)
+* `build` is finalized by `assembleRequirements`
 
-1. Plugin is applied
-2. `assembleRequirements` task is created and configured
-3. Task runs after `check` (when all tests complete)
-4. ZIP artifact is created in `build/reqstool/`
-5. If `maven-publish` plugin is applied, artifact is registered for publication
+These dependencies ensure annotation processors run before the task executes.
+No manual wiring is needed unless you override annotation file paths with `setSvcsAnnotationsFiles(...)`.
+
+== Default lifecycle
+
+[source]
+----
+build
+ └── (finalizedBy) assembleRequirements
+                    ├── (dependsOn) compileJava
+                    ├── (dependsOn) compileTestJava
+                    └── (dependsOn) compileIntegrationTestJava  (if source set exists)
+----
+
+ZIP artifact is written to `build/reqstool/<name>-<version>-reqstool.zip`.
