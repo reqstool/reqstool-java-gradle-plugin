@@ -17,6 +17,8 @@ import java.util.stream.Collectors;
  */
 public class RequirementsToolExtension {
 
+	private final Project project;
+
 	private final RegularFileProperty requirementsAnnotationsFile;
 
 	private final ConfigurableFileCollection svcsAnnotationsFiles;
@@ -39,6 +41,7 @@ public class RequirementsToolExtension {
 	 * @param project the Gradle project
 	 */
 	public RequirementsToolExtension(Project project) {
+		this.project = project;
 		this.requirementsAnnotationsFile = project.getObjects().fileProperty();
 		this.svcsAnnotationsFiles = project.getObjects().fileCollection();
 		this.outputDirectory = project.getObjects().fileProperty();
@@ -103,6 +106,17 @@ public class RequirementsToolExtension {
 	 */
 	public ConfigurableFileCollection getSvcsAnnotationsFiles() {
 		return svcsAnnotationsFiles;
+	}
+
+	/**
+	 * @deprecated Use {@link #getSvcsAnnotationsFiles()} instead.
+	 */
+	@Deprecated
+	public void setSvcsAnnotationsFile(Object file) {
+		project.getLogger()
+			.warn("[reqstool] 'svcsAnnotationsFile' is deprecated and will be removed in a future release."
+					+ " Use 'svcsAnnotationsFiles.from(...)' instead.");
+		this.svcsAnnotationsFiles.from(file);
 	}
 
 	/**

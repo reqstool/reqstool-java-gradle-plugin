@@ -169,6 +169,16 @@ class RequirementsToolTaskTest {
 	}
 
 	@Test
+	void testDeprecatedSvcsAnnotationsFileSetter() {
+		RequirementsToolExtension extension = project.getExtensions()
+			.create("requirementsTool", RequirementsToolExtension.class, project);
+
+		File file = tempDir.resolve("annotations.yml").toFile();
+		assertDoesNotThrow(() -> extension.setSvcsAnnotationsFile(file));
+		assertTrue(extension.getSvcsAnnotationsFiles().contains(file));
+	}
+
+	@Test
 	void testMissingRequirementsFile() throws IOException {
 		// Setup directories
 		File outputDir = tempDir.resolve("build/reqstool").toFile();
