@@ -23,6 +23,8 @@ public class RequirementsToolExtension {
 
 	private final ConfigurableFileCollection svcsAnnotationsFiles;
 
+	private boolean svcsAnnotationsFilesExplicit = false;
+
 	private final RegularFileProperty outputDirectory;
 
 	private final RegularFileProperty datasetPath;
@@ -106,6 +108,25 @@ public class RequirementsToolExtension {
 	 */
 	public ConfigurableFileCollection getSvcsAnnotationsFiles() {
 		return svcsAnnotationsFiles;
+	}
+
+	/**
+	 * Replaces the auto-discovered SVCs annotations file collection with explicit paths and
+	 * disables auto-wired compile task dependencies.
+	 * @param paths one or more file paths, {@link java.io.File}, or
+	 * {@link org.gradle.api.file.FileCollection} entries
+	 */
+	public void setSvcsAnnotationsFiles(Object... paths) {
+		this.svcsAnnotationsFilesExplicit = true;
+		this.svcsAnnotationsFiles.setFrom(paths);
+	}
+
+	/**
+	 * Returns whether {@link #getSvcsAnnotationsFiles()} was explicitly configured.
+	 * @return {@code true} if the user called {@link #setSvcsAnnotationsFiles}
+	 */
+	public boolean isSvcsAnnotationsFilesExplicit() {
+		return svcsAnnotationsFilesExplicit;
 	}
 
 	/**

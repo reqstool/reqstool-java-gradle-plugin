@@ -3,8 +3,11 @@ package io.github.reqstool.gradle;
 
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
+import org.gradle.api.plugins.JavaPlugin;
+import org.gradle.api.plugins.JavaPluginExtension;
 import org.gradle.api.publish.PublishingExtension;
 import org.gradle.api.publish.maven.MavenPublication;
+import org.gradle.api.tasks.SourceSet;
 import org.gradle.api.tasks.TaskProvider;
 
 /**
@@ -60,6 +63,27 @@ public class RequirementsToolPlugin implements Plugin<Project> {
 							.getProjectDirectory()
 							.file(dir.getAsFile().getPath() + "/" + zipFileName)));
 			});
+
+		// Auto-wire compile task dependencies and build lifecycle integration
+		project.getPlugins().withType(JavaPlugin.class, javaPlugin -> {
+			JavaPluginExtension javaExt = project.getExtensions().getByType(JavaPluginExtension.class);
+
+			String compileMain = javaExt.getSourceSets()
+				.getByName(SourceSet.MAIN_SOURCE_SET_NAME)
+				.getCompileJavaTaskName();
+			assembleTask.configure(task -> task.dependsOn(project.getTasks().named(compileMain)));
+
+			project.afterEvaluate(p -> {
+				if (!extension.isSvcsAnnotationsFilesExplicit()) {
+					javaExt.getSourceSets()
+						.stream()
+						.filter(ss -> !SourceSet.MAIN_SOURCE_SET_NAME.equals(ss.getName()))
+						.forEach(ss -> assembleTask
+							.configure(task -> task.dependsOn(project.getTasks().named(ss.getCompileJavaTaskName()))));
+				}
+				project.getTasks().named("build").configure(build -> build.finalizedBy(assembleTask));
+			});
+		});
 
 		// Auto-configure Maven publishing if maven-publish plugin is applied
 		project.getPlugins().withId("maven-publish", plugin -> {

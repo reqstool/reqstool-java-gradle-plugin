@@ -169,6 +169,20 @@ class RequirementsToolTaskTest {
 	}
 
 	@Test
+	void testSetSvcsAnnotationsFilesMarksExplicit() {
+		RequirementsToolExtension extension = project.getExtensions()
+			.create("requirementsTool", RequirementsToolExtension.class, project);
+
+		assertFalse(extension.isSvcsAnnotationsFilesExplicit());
+
+		File file = tempDir.resolve("annotations.yml").toFile();
+		extension.setSvcsAnnotationsFiles(file);
+
+		assertTrue(extension.isSvcsAnnotationsFilesExplicit());
+		assertTrue(extension.getSvcsAnnotationsFiles().contains(file));
+	}
+
+	@Test
 	void testDeprecatedSvcsAnnotationsFileSetter() {
 		RequirementsToolExtension extension = project.getExtensions()
 			.create("requirementsTool", RequirementsToolExtension.class, project);
