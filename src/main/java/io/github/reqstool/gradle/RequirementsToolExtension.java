@@ -111,8 +111,8 @@ public class RequirementsToolExtension {
 	}
 
 	/**
-	 * Replaces the auto-discovered SVCs annotations file collection with explicit paths and
-	 * disables auto-wired compile task dependencies.
+	 * Replaces the auto-discovered SVCs annotations file collection with explicit paths
+	 * and disables auto-wired compile task dependencies.
 	 * @param paths one or more file paths, {@link java.io.File}, or
 	 * {@link org.gradle.api.file.FileCollection} entries
 	 */
@@ -131,6 +131,7 @@ public class RequirementsToolExtension {
 
 	/**
 	 * @deprecated Use {@link #getSvcsAnnotationsFiles()} instead.
+	 * @param file the file to add to {@link #getSvcsAnnotationsFiles()}
 	 */
 	@Deprecated
 	public void setSvcsAnnotationsFile(Object file) {
