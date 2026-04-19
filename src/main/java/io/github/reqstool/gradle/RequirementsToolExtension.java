@@ -17,9 +17,13 @@ import java.util.stream.Collectors;
  */
 public class RequirementsToolExtension {
 
+	private final Project project;
+
 	private final RegularFileProperty requirementsAnnotationsFile;
 
 	private final ConfigurableFileCollection svcsAnnotationsFiles;
+
+	private boolean svcsAnnotationsFilesExplicit = false;
 
 	private final RegularFileProperty outputDirectory;
 
@@ -39,6 +43,7 @@ public class RequirementsToolExtension {
 	 * @param project the Gradle project
 	 */
 	public RequirementsToolExtension(Project project) {
+		this.project = project;
 		this.requirementsAnnotationsFile = project.getObjects().fileProperty();
 		this.svcsAnnotationsFiles = project.getObjects().fileCollection();
 		this.outputDirectory = project.getObjects().fileProperty();
@@ -103,6 +108,37 @@ public class RequirementsToolExtension {
 	 */
 	public ConfigurableFileCollection getSvcsAnnotationsFiles() {
 		return svcsAnnotationsFiles;
+	}
+
+	/**
+	 * Replaces the auto-discovered SVCs annotations file collection with explicit paths
+	 * and disables auto-wired compile task dependencies.
+	 * @param paths one or more file paths, {@link java.io.File}, or
+	 * {@link org.gradle.api.file.FileCollection} entries
+	 */
+	public void setSvcsAnnotationsFiles(Object... paths) {
+		this.svcsAnnotationsFilesExplicit = true;
+		this.svcsAnnotationsFiles.setFrom(paths);
+	}
+
+	/**
+	 * Returns whether {@link #getSvcsAnnotationsFiles()} was explicitly configured.
+	 * @return {@code true} if the user called {@link #setSvcsAnnotationsFiles}
+	 */
+	public boolean isSvcsAnnotationsFilesExplicit() {
+		return svcsAnnotationsFilesExplicit;
+	}
+
+	/**
+	 * @deprecated Use {@link #getSvcsAnnotationsFiles()} instead.
+	 * @param file the file to add to {@link #getSvcsAnnotationsFiles()}
+	 */
+	@Deprecated
+	public void setSvcsAnnotationsFile(Object file) {
+		project.getLogger()
+			.warn("[reqstool] 'svcsAnnotationsFile' is deprecated and will be removed in a future release."
+					+ " Use 'svcsAnnotationsFiles.from(...)' instead.");
+		this.svcsAnnotationsFiles.from(file);
 	}
 
 	/**

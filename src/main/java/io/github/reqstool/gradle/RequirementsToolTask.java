@@ -283,6 +283,11 @@ public class RequirementsToolTask extends DefaultTask {
 					.path(XML_REQUIREMENT_ANNOTATIONS)
 					.path(XML_IMPLEMENTATIONS);
 			}
+			else if (reqAnnotFile != null) {
+				getLogger().warn(
+						"reqstool: no annotations found at {} — ensure the compile task runs before assembleRequirements",
+						reqAnnotFile.getAbsolutePath());
+			}
 
 			ObjectNode mergedTestsNode = yamlMapper.createObjectNode();
 			for (File svcsAnnotFile : svcsAnnotationsFiles.getFiles()) {
@@ -291,6 +296,11 @@ public class RequirementsToolTask extends DefaultTask {
 						.path(XML_REQUIREMENT_ANNOTATIONS)
 						.path(XML_TESTS);
 					mergeTestNodes(mergedTestsNode, fileTestsNode);
+				}
+				else {
+					getLogger().warn(
+							"reqstool: no annotations found at {} — ensure the compile task runs before assembleRequirements",
+							svcsAnnotFile.getAbsolutePath());
 				}
 			}
 			testsNode = mergedTestsNode.isEmpty() ? yamlMapper.createObjectNode() : mergedTestsNode;

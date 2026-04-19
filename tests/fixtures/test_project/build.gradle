@@ -69,11 +69,3 @@ requirementsTool {
     datasetPath = file('docs/reqstool')
     testResults = ['build/test-results/**/*.xml']
 }
-
-tasks.named('build') {
-    finalizedBy tasks.named('assembleRequirements')
-}
-
-tasks.named('assembleRequirements') {
-    dependsOn test, testing.suites.integrationTest
-}
