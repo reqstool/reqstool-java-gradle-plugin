@@ -43,8 +43,8 @@ gradlePlugin {
 
 dependencies {
     // Jackson for YAML processing
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.21.3'
-    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.21.3'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.21.4'
+    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.21.4'
     
     // SnakeYAML for reqstool_config.yml generation
     implementation 'org.yaml:snakeyaml:2.6'
