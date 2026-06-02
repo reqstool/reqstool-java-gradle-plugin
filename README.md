@@ -69,6 +69,34 @@ requirementsTool {
 }
 ```
 
+## JUnit 5 parameterized tests
+
+Gradle's JUnit XML reporter writes test case names using the parameterized test's display name.
+By default this is `[N] arguments` — a format that omits the method name.
+Reqstool cannot link these entries to `@SVCs`-annotated methods without the method name.
+
+Add this to your build to include the method name in every test case name, covering all test tasks (unit, integration, e2e):
+
+```groovy
+tasks.withType(Test).configureEach {
+    systemProperty 'junit.jupiter.params.displayname.default', '{displayName}[{index}]'
+}
+```
+
+Kotlin DSL:
+
+```kotlin
+tasks.withType<Test>().configureEach {
+    systemProperty("junit.jupiter.params.displayname.default", "{displayName}[{index}]")
+}
+```
+
+This produces names like `checkStatus(StatusType)[1]` instead of `[1] ACTIVE`, which reqstool can correctly attribute to the annotated method.
+
+> **Note:** Tests with an explicit `@ParameterizedTest(name = "{index} ...")` still omit the method name because the explicit value overrides the default. Either remove the custom `name` or change it to start with `{displayName}`: `@ParameterizedTest(name = "{displayName}[{index}] ...")`.
+
+Maven Surefire always embeds the method name regardless of display-name settings — no change needed for Maven projects.
+
 ## Task reference
 
 ### `assembleRequirements`
