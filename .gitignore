@@ -40,6 +40,4 @@ bin/
 
 ### Claude Code ###
 .claude/*
-!.claude/commands/
-!.claude/skills/
 !.claude/settings.json
