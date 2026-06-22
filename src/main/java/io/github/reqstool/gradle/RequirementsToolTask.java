@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator;
+import io.github.reqstool.annotations.Requirements;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.GradleException;
 import org.gradle.api.file.ConfigurableFileCollection;
@@ -263,6 +264,7 @@ public class RequirementsToolTask extends DefaultTask {
 	 * annotations file, and optionally assembles a ZIP artifact containing requirements,
 	 * annotations, and test results.
 	 */
+	@Requirements({ "GRADLE_PLUGIN_003" })
 	@TaskAction
 	public void execute() {
 		if (skip.get()) {
@@ -334,6 +336,7 @@ public class RequirementsToolTask extends DefaultTask {
 	 * @param testsNode node containing test cases
 	 * @return combined requirement annotations node
 	 */
+	@Requirements({ "GRADLE_PLUGIN_001" })
 	static JsonNode combineOutput(JsonNode implementationsNode, JsonNode testsNode) {
 		ObjectNode requirementAnnotationsNode = yamlMapper.createObjectNode();
 		if (!implementationsNode.isEmpty()) {
@@ -355,6 +358,7 @@ public class RequirementsToolTask extends DefaultTask {
 	 * @param target the node to merge into
 	 * @param source the node to merge from
 	 */
+	@Requirements({ "GRADLE_PLUGIN_001" })
 	static void mergeTestNodes(ObjectNode target, JsonNode source) {
 		if (!source.isObject()) {
 			return;
@@ -396,6 +400,7 @@ public class RequirementsToolTask extends DefaultTask {
 	 * results.
 	 * @throws IOException if ZIP creation or file reading fails
 	 */
+	@Requirements({ "GRADLE_PLUGIN_002" })
 	private void assembleZipArtifact() throws IOException {
 		String zipArtifactFilename = projectName.get() + "-" + projectVersion.get() + "-reqstool.zip";
 		String topLevelDir = projectName.get() + "-" + projectVersion.get() + "-reqstool";
