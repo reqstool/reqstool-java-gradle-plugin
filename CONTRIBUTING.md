@@ -16,6 +16,14 @@ git clone https://github.com/reqstool/reqstool-java-gradle-plugin.git
 cd reqstool-java-gradle-plugin
 ```
 
+If using Claude Code, regenerate the `opsx` slash commands and OpenSpec skills
+(`.claude/commands/opsx/`, `.claude/skills/openspec-*`) after cloning — they're
+CLI-generated tool scaffolding, not committed to the repo:
+
+```bash
+openspec update   # or: openspec init --tools claude --force
+```
+
 ## Build & Test
 
 ```bash
