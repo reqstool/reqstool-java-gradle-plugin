@@ -23,6 +23,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
+import io.github.reqstool.annotations.SVCs;
+
 class RequirementsToolTaskTest {
 
 	@TempDir
@@ -88,6 +90,7 @@ class RequirementsToolTaskTest {
 		assertTrue(reqAnnotations.has("tests"));
 	}
 
+	@SVCs("SVC_GRADLE_PLUGIN_001")
 	@Test
 	void testCombineOutput_withBoth() throws IOException {
 		ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
@@ -128,6 +131,7 @@ class RequirementsToolTaskTest {
 		assertFalse(task.getSkipAssembleZipArtifact().get());
 	}
 
+	@SVCs("SVC_GRADLE_PLUGIN_003")
 	@Test
 	void testSkipExecution() {
 		task.getSkip().set(true);
@@ -142,6 +146,7 @@ class RequirementsToolTaskTest {
 		assertDoesNotThrow(() -> task.execute());
 	}
 
+	@SVCs("SVC_GRADLE_PLUGIN_001")
 	@Test
 	void testMergeTestNodes_mergesTwoFiles() throws IOException {
 		String yaml1 = "requirement_annotations:\n  tests:\n"
@@ -192,6 +197,57 @@ class RequirementsToolTaskTest {
 		assertTrue(extension.getSvcsAnnotationsFiles().contains(file));
 	}
 
+	@SVCs("SVC_GRADLE_PLUGIN_002")
+	@Test
+	void testAssembleZipArtifactHappyPath() throws IOException {
+		File outputDir = tempDir.resolve("build/reqstool").toFile();
+		File datasetDir = tempDir.resolve("reqstool").toFile();
+		datasetDir.mkdirs();
+		java.nio.file.Files.writeString(new File(datasetDir, "requirements.yml").toPath(), "requirements: []\n");
+
+		task.getSkip().set(false);
+		task.getSkipAssembleZipArtifact().set(false);
+		task.getProjectName().set("test-project");
+		task.getProjectVersion().set("1.0.0");
+		task.getProjectBasedir().set(tempDir.toFile());
+		task.getOutputDirectory().set(outputDir);
+		task.getDatasetPath().set(datasetDir);
+		task.getTestResults().set(java.util.Arrays.asList("build/test-results/**/*.xml"));
+		File zipFile = new File(outputDir, "test-project-1.0.0-reqstool.zip");
+		task.getZipFile().set(zipFile);
+
+		task.execute();
+
+		assertTrue(zipFile.exists());
+		assertTrue(new File(outputDir, RequirementsToolTask.OUTPUT_FILE_ANNOTATIONS_YML_FILE).exists());
+	}
+
+	@SVCs("SVC_GRADLE_PLUGIN_003")
+	@Test
+	void testSkipAssembleZipArtifactBypassesZipCreation() throws IOException {
+		File outputDir = tempDir.resolve("build/reqstool").toFile();
+		File datasetDir = tempDir.resolve("reqstool").toFile();
+		datasetDir.mkdirs();
+		java.nio.file.Files.writeString(new File(datasetDir, "requirements.yml").toPath(), "requirements: []\n");
+
+		task.getSkip().set(false);
+		task.getSkipAssembleZipArtifact().set(true);
+		task.getProjectName().set("test-project");
+		task.getProjectVersion().set("1.0.0");
+		task.getProjectBasedir().set(tempDir.toFile());
+		task.getOutputDirectory().set(outputDir);
+		task.getDatasetPath().set(datasetDir);
+		task.getTestResults().set(java.util.Arrays.asList("build/test-results/**/*.xml"));
+		File zipFile = new File(outputDir, "test-project-1.0.0-reqstool.zip");
+		task.getZipFile().set(zipFile);
+
+		task.execute();
+
+		assertFalse(zipFile.exists());
+		assertTrue(new File(outputDir, RequirementsToolTask.OUTPUT_FILE_ANNOTATIONS_YML_FILE).exists());
+	}
+
+	@SVCs("SVC_GRADLE_PLUGIN_002")
 	@Test
 	void testMissingRequirementsFile() throws IOException {
 		// Setup directories

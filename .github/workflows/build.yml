@@ -10,9 +10,16 @@ on:
       - reopened
       - synchronize
 
+permissions:
+  contents: read
+
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        reqstool-source: [pypi, main]
     steps:
       - uses: actions/checkout@v7
       - name: Set up Java
@@ -22,3 +29,32 @@ jobs:
           distribution: "temurin"
       - name: Build
         run: ./gradlew clean build
+      - name: Self-apply plugin to assemble dataset zip
+        # True self-application (publishing to mavenLocal and re-applying the plugin
+        # to its own sources from a separate project) is not yet wired up for Gradle.
+        # As an interim measure, merge the annotation processor's own main/test output
+        # (already produced by `./gradlew build` above) the same way the plugin's
+        # combineOutput() would, so reqstool status has real, non-fabricated data.
+        run: |
+          mkdir -p build/reqstool
+          {
+            echo "# yaml-language-server: \$schema=https://raw.githubusercontent.com/reqstool/reqstool-client/main/src/reqstool/resources/schemas/v1/annotations.schema.json"
+            yq eval-all '. as $item ireduce ({}; . * $item )' \
+              build/generated/sources/annotationProcessor/java/main/resources/annotations.yml \
+              build/generated/sources/annotationProcessor/java/test/resources/annotations.yml | grep -v "^#"
+          } > build/reqstool/annotations.yml
+      - name: Install reqstool
+        uses: reqstool/.github/.github/actions/install-reqstool@9c6feaab046f4782f430dd2527fdb82c2a5cd926 # main 2026-06-22
+        with:
+          reqstool-source: ${{ matrix.reqstool-source }}
+      - name: Validate reqstool spec completeness
+        # not yet available in the latest PyPI release
+        if: matrix.reqstool-source == 'main'
+        uses: reqstool/.github/.github/actions/validate-reqstool@9c6feaab046f4782f430dd2527fdb82c2a5cd926 # main 2026-06-22
+      - name: Run reqstool status
+        uses: reqstool/.github/.github/actions/reqstool-status@9c6feaab046f4782f430dd2527fdb82c2a5cd926 # main 2026-06-22
+        with:
+          fail-if-incomplete: "true"
+
+  validate-openspec:
+    uses: reqstool/.github/.github/workflows/common-validate-openspec.yml@9c6feaab046f4782f430dd2527fdb82c2a5cd926 # main 2026-06-22
