@@ -10,4 +10,4 @@ permissions:
 
 jobs:
   check:
-    uses: reqstool/.github/.github/workflows/common-check-semantic-pr.yml@e1d67194373e4da7ccfdf400f46201f18ca14f23 # main 2026-03-07
+    uses: reqstool/.github/.github/workflows/common-check-semantic-pr.yml@main

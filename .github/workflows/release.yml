@@ -1,0 +1,114 @@
+name: Release
+
+# The whole release, start to finish. See RELEASING.md in reqstool/.github for
+# what each step does, and for why the release is created as a prerelease rather
+# than a draft.
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to release (Maven, no v prefix), e.g. 1.1.0. Leave empty to auto-detect from Conventional Commits."
+        required: false
+        type: string
+      prerelease:
+        description: "Publish as a release candidate instead of a release: verified like any release, but never promoted to latest. The number is chosen for you (1.1.0 -> 1.1.0-rc1, then the next)."
+        required: false
+        type: choice
+        options: [none, rc, b, a]
+        default: none
+      ref:
+        description: "Branch to release from. Leave empty for the branch this workflow was dispatched on."
+        required: false
+        type: string
+      force:
+        description: "Allow a version that disagrees with the auto-detected one."
+        required: false
+        type: boolean
+        default: false
+      dry-run:
+        description: "Validate and preview only -- nothing tagged, nothing published."
+        required: false
+        type: boolean
+        default: true
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  prepare:
+    uses: reqstool/.github/.github/workflows/common-release-prepare.yml@main
+    permissions:
+      contents: read
+    with:
+      version-format: maven
+      version: ${{ inputs.version }}
+      prerelease: ${{ inputs.prerelease }}
+      ref: ${{ inputs.ref }}
+      force: ${{ inputs.force }}
+      dry-run: ${{ inputs.dry-run }}
+
+  # The same checks that guard main, called rather than reimplemented, and run
+  # before the approval gate so the reviewer approves something already green
+  # rather than a version string.
+  checks:
+    needs: prepare
+    if: ${{ !inputs.dry-run }}
+    uses: ./.github/workflows/build.yml
+    permissions:
+      contents: read
+
+  # THE APPROVAL GATE -- bound to the `stable` environment, so it sits pending
+  # until a required reviewer approves it on the run page.
+  tag:
+    needs: [prepare, checks]
+    if: ${{ !inputs.dry-run }}
+    uses: reqstool/.github/.github/workflows/common-release-tag.yml@main
+    permissions:
+      contents: write
+    with:
+      version: ${{ needs.prepare.outputs.version }}
+      version-format: maven
+      ref: ${{ inputs.ref }}
+
+  # `./gradlew publishPlugins` builds from the tag itself, so there is no
+  # separate build step. `version` makes a disagreement a hard stop before
+  # anything reaches the portal.
+  publish-to-plugin-portal:
+    needs: [prepare, tag]
+    uses: reqstool/.github/.github/workflows/java-publish-to-gradle.yml@main
+    permissions:
+      contents: read
+    secrets: inherit
+    with:
+      target: portal
+      ref: ${{ needs.prepare.outputs.version }}
+      version: ${{ needs.prepare.outputs.version }}
+      environment: stable
+
+  # Last, deliberately. Everything above can fail, and until this runs nothing
+  # resolving "the latest release" can see what was built -- the release is still
+  # a prerelease. Promotion itself is one API call against a release that already
+  # has its artifacts.
+  #
+  # The guard is `no job failed`, not the default `every job succeeded`: a release
+  # candidate deliberately skips the publish jobs that a real release runs, and a
+  # skipped dependency would otherwise cascade and skip this too -- leaving the
+  # candidate unpromoted, which is right, and every *real* release unpromoted the
+  # moment any optional job is skipped, which is not.
+  #
+  # `!inputs.dry-run` has to be spelled out for the same reason: on a dry run
+  # every job above is skipped, and "nothing failed" would otherwise be true.
+  promote:
+    needs: [prepare, publish-to-plugin-portal]
+    if: ${{ !inputs.dry-run && !cancelled() && !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled') }}
+    uses: reqstool/.github/.github/workflows/common-release-promote.yml@main
+    permissions:
+      contents: write
+    with:
+      version: ${{ needs.prepare.outputs.version }}
+      prerelease: ${{ needs.prepare.outputs.prerelease == 'true' }}

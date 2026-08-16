@@ -1,5 +1,19 @@
 on:
   workflow_call:
+    inputs:
+      ref:
+        description: "Branch, tag or SHA to build. Empty = the caller's ref."
+        required: false
+        type: string
+        default: ""
+      artifact-name:
+        description: >
+          Name to upload the build output under. The release flow runs this
+          workflow twice in one run -- once on the branch, once on the tag -- and
+          upload-artifact rejects a duplicate name.
+        required: false
+        type: string
+        default: "dist"
   workflow_dispatch:
   push:
     branches:
@@ -21,7 +35,14 @@ jobs:
       matrix:
         reqstool-source: [pypi, main]
     steps:
+      # Full history and tags: git-dyn-semver derives the version from git state, so a
+      # shallow clone would build the wrong number rather than fail.
       - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+          fetch-tags: true
+          ref: ${{ inputs.ref || github.ref }}
       - name: Set up Java
         uses: actions/setup-java@v5
         with:
