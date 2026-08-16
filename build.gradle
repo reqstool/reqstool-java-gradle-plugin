@@ -4,18 +4,13 @@ plugins {
     id 'maven-publish'
     id 'io.spring.javaformat' version '0.0.47'
     id 'com.gradle.plugin-publish' version '2.1.1'
-    id 'pl.allegro.tech.build.axion-release' version '1.21.3'
-}
-
-scmVersion {
-    tag {
-        prefix = ''
-    }
-    versionCreator 'simple'
+    // Sets the project version from git tags using Conventional Commits bump
+    // logic -- the Gradle counterpart to Nisse on the Maven side, so the tag is
+    // the only version across the org. See RELEASING.md in reqstool/.github.
+    id 'io.github.jimisola.git-dyn-semver' version '0.1.2'
 }
 
 group = 'io.github.reqstool'
-version = scmVersion.version
 
 java {
     sourceCompatibility = JavaVersion.VERSION_21
