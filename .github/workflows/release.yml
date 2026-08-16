@@ -72,6 +72,7 @@ jobs:
       contents: write
     with:
       version: ${{ needs.prepare.outputs.version }}
+      version-format: maven
       ref: ${{ inputs.ref }}
 
   # `./gradlew publishPlugins` builds from the tag itself, so there is no
