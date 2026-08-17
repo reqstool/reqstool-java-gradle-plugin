@@ -2,7 +2,7 @@ plugins {
     id 'java-gradle-plugin'
     id 'java-library'
     id 'maven-publish'
-    id 'io.spring.javaformat' version '0.0.47'
+    id 'io.spring.javaformat' version '0.0.48'
     id 'com.gradle.plugin-publish' version '2.1.1'
     // Sets the project version from git tags using Conventional Commits bump
     // logic -- the Gradle counterpart to Nisse on the Maven side, so the tag is
