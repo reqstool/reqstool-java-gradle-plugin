@@ -42,7 +42,7 @@ dependencies {
     implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.22.2'
 
     // SnakeYAML for reqstool_config.yml generation
-    implementation 'org.yaml:snakeyaml:2.6'
+    implementation 'org.yaml:snakeyaml:2.7'
 
     // reqstool dogfooding: @Requirements/@SVCs annotations + processor
     implementation 'io.github.reqstool:reqstool-java-annotations:1.0.1'
