@@ -50,6 +50,10 @@ dependencies {
     testImplementation 'io.github.reqstool:reqstool-java-annotations:1.0.1'
     testAnnotationProcessor 'io.github.reqstool:reqstool-java-annotations:1.0.1'
 
+    // TestKit runs a real Gradle build, which is the only way to observe a
+    // configuration-time circular dependency (see BuildLifecycleWiringTest).
+    testImplementation gradleTestKit()
+
     // Testing - JUnit BOM for version management
     testImplementation platform('org.junit:junit-bom:6.1.3')
     testImplementation 'org.junit.jupiter:junit-jupiter-api'
