@@ -3,6 +3,7 @@ package io.github.reqstool.gradle;
 
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
+import org.gradle.api.plugins.JavaBasePlugin;
 import org.gradle.api.plugins.JavaPlugin;
 import org.gradle.api.plugins.JavaPluginExtension;
 import org.gradle.api.publish.PublishingExtension;
@@ -81,7 +82,19 @@ public class RequirementsToolPlugin implements Plugin<Project> {
 						.forEach(ss -> assembleTask
 							.configure(task -> task.dependsOn(project.getTasks().named(ss.getCompileJavaTaskName()))));
 				}
-				project.getTasks().named("build").configure(build -> build.finalizedBy(assembleTask));
+				// `build dependsOn assembleRequirements dependsOn check`, not
+				// `build finalizedBy assembleRequirements`. Both put the task after the
+				// tests, which it needs -- it reads their XML output -- but only this
+				// one composes with a consumer that already wired the lifecycle by
+				// hand. dependsOn is idempotent, so a consumer repeating either edge
+				// changes nothing; finalizedBy contradicts a consumer's
+				// `build.dependsOn(assembleRequirements)` and Gradle rejects the pair
+				// as a circular dependency at configuration time, failing the build
+				// before anything compiles. Versions 0.1.0 and 0.1.1 wired nothing at
+				// all, so consumers had every reason to write that line themselves.
+				// See reqstool/reqstool-java-gradle-plugin#88.
+				assembleTask.configure(task -> task.dependsOn(p.getTasks().named(JavaBasePlugin.CHECK_TASK_NAME)));
+				p.getTasks().named("build").configure(build -> build.dependsOn(assembleTask));
 			});
 		});
 

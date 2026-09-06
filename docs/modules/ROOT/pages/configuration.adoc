@@ -166,9 +166,12 @@ When the `java` plugin is applied, the plugin automatically wires:
 
 * `assembleRequirements` depends on `compileJava` (main source set)
 * `assembleRequirements` depends on `compileXxxJava` for each non-main source set (unless `svcsAnnotationsFiles` was set explicitly via `setSvcsAnnotationsFiles(...)`)
-* `build` is finalized by `assembleRequirements`
+* `assembleRequirements` depends on `check`, so test results exist when it runs
+* `build` depends on `assembleRequirements`
 
-No manual `dependsOn` or `finalizedBy` blocks are needed in the consuming project.
+No manual `dependsOn` blocks are needed in the consuming project. If you already have
+`build.dependsOn(assembleRequirements)` from an earlier version, it is now redundant but
+harmless -- `dependsOn` is idempotent.
 
 If an annotation file is missing at execution time (e.g. when a compile task was excluded), the plugin emits a `WARN` message identifying the missing file.
 

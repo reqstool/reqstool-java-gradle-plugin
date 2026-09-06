@@ -5,7 +5,7 @@ This Gradle plugin generates a ZIP artifact containing combined annotations and 
 == Features
 
 * *Zero-configuration*: Works out of the box with sensible defaults
-* *Automatic task wiring*: `assembleRequirements` depends on all compile tasks; `build` is finalized by `assembleRequirements`
+* *Automatic task wiring*: `assembleRequirements` depends on `check` and all compile tasks; `build` depends on `assembleRequirements`
 * *Multi-source-set support*: SVCs annotation files are auto-discovered from all non-main source sets
 * *Maven publishing support*: Automatically registers ZIP artifact for publication
 * *Combines annotations*: Merges requirements annotations from implementation and test code

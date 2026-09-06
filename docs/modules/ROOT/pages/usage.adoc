@@ -67,7 +67,8 @@ then (unless `skipAssembleZipArtifact` is set) assembles a ZIP artifact at
 
 * Depends on `compileJava` (main source set — generates `requirementsAnnotationsFile`)
 * Depends on `compileXxxJava` for each non-main source set (generates entries in `svcsAnnotationsFiles`)
-* `build` is finalized by `assembleRequirements`
+* Depends on `check`, so the test results it reads have been produced
+* `build` depends on `assembleRequirements`
 
 These dependencies ensure annotation processors run before the task executes.
 No manual wiring is needed unless you override annotation file paths with `setSvcsAnnotationsFiles(...)`.
@@ -77,10 +78,11 @@ No manual wiring is needed unless you override annotation file paths with `setSv
 [source]
 ----
 build
- └── (finalizedBy) assembleRequirements
-                    ├── (dependsOn) compileJava
-                    ├── (dependsOn) compileTestJava
-                    └── (dependsOn) compileIntegrationTestJava  (if source set exists)
+ └── (dependsOn) assembleRequirements
+                  ├── (dependsOn) check
+                  ├── (dependsOn) compileJava
+                  ├── (dependsOn) compileTestJava
+                  └── (dependsOn) compileIntegrationTestJava  (if source set exists)
 ----
 
 ZIP artifact is written to `build/reqstool/<name>-<version>-reqstool.zip`.

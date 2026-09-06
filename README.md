@@ -12,7 +12,7 @@ Gradle build plugin for [reqstool](https://github.com/reqstool/reqstool-client) 
 
 Collects `@Requirements` and `@SVCs` annotations from compiled Java code, combines them with test results, and packages everything into a ZIP artifact for analysis by the reqstool CLI. Supports Java 21+.
 
-The plugin automatically wires task dependencies: `assembleRequirements` depends on all `compileJava` tasks, and `build` is finalized by `assembleRequirements`. No manual task wiring is needed in most projects.
+The plugin automatically wires task dependencies: `assembleRequirements` depends on `check` and on all `compileJava` tasks, and `build` depends on `assembleRequirements`. No manual task wiring is needed in most projects.
 
 ## Installation
 
@@ -109,7 +109,8 @@ Combines requirements and SVCs annotations from all source sets, writes a merged
 
 - Depends on `compileJava` (main source set)
 - Depends on `compileXxxJava` for each non-main source set (unless `svcsAnnotationsFiles` was set explicitly)
-- `build` is finalized by `assembleRequirements`
+- `assembleRequirements` depends on `check`
+- `build` depends on `assembleRequirements`
 
 ## Usage
 

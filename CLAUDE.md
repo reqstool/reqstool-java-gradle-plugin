@@ -26,6 +26,7 @@ src/main/java/io/github/reqstool/gradle/
 
 src/test/java/io/github/reqstool/gradle/
   RequirementsToolTaskTest.java   # unit tests (see below)
+  BuildLifecycleWiringTest.java   # TestKit: how the task joins `build` (issue #88)
 
 src/test/resources/{yml,zip}/     # tracked reference fixtures (see "Fixtures" below)
 
@@ -35,8 +36,13 @@ docs/modules/ROOT/                # Antora documentation source (published to re
 ```
 
 The main task is `assembleRequirements` (group `build`). When the `java` plugin is applied,
-the plugin auto-wires it to depend on `compileJava` and every non-main source set's compile
-task, and makes `build` finalized by `assembleRequirements`.
+the plugin auto-wires it to depend on `check`, on `compileJava` and on every non-main source
+set's compile task, and makes `build` depend on `assembleRequirements`.
+
+Use `dependsOn` rather than `finalizedBy` for that last edge. `dependsOn` is idempotent, so
+a consumer that wired the lifecycle by hand — as 0.1.0 and 0.1.1 required — merely repeats
+an edge that already exists. `finalizedBy` states the opposite order and Gradle rejects the
+pair as a circular dependency at configuration time; that was issue #88.
 
 ## Running tests
 
@@ -60,6 +66,21 @@ Jackson (`ObjectMapper` + `YAMLFactory`) — it does **not** read from `src/test
 | `testSetSvcsAnnotationsFilesMarksExplicit` | Setting `svcsAnnotationsFiles` explicitly marks the extension as no longer using auto-discovery |
 | `testDeprecatedSvcsAnnotationsFileSetter` | The deprecated singular `setSvcsAnnotationsFile()` still works and delegates to `svcsAnnotationsFiles` |
 | `testMissingRequirementsFile` | `task.execute()` throws an exception whose message mentions `requirements.yml` when the dataset directory doesn't contain it |
+
+## Lifecycle tests — `BuildLifecycleWiringTest`
+
+TestKit (`GradleRunner`) over a throwaway consumer project, run with `--dry-run`: a circular
+dependency is raised while Gradle builds the task graph, so the failure is reproduced
+without compiling or resolving anything.
+
+| Test | Validates |
+|---|---|
+| `consumerDeclaringBuildDependsOnAssembleRequirementsStillConfigures` | A consumer's own `build.dependsOn(assembleRequirements)` does not collide with the plugin's wiring — the regression in #88 |
+| `assembleRequirementsIsPartOfBuildWithoutConsumerWiring` | The plugin alone still puts the task into `build` |
+| `assembleRequirementsRunsAfterCheck` | `check` is ordered first, since the task reads test-result XML |
+
+`tests/fixtures/test_project` cannot cover this: it declares no wiring of its own, so it only
+ever exercises the case where the plugin is the sole author of these edges.
 
 ## Fixtures
 
