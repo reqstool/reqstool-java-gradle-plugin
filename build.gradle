@@ -7,7 +7,7 @@ plugins {
     // Sets the project version from git tags using Conventional Commits bump
     // logic -- the Gradle counterpart to Nisse on the Maven side, so the tag is
     // the only version across the org. See RELEASING.md in reqstool/.github.
-    id 'io.github.jimisola.git-dyn-semver' version '0.1.2'
+    id 'io.github.jimisola.git-dyn-semver' version '0.1.4'
 }
 
 group = 'io.github.reqstool'
