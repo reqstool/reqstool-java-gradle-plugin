@@ -45,10 +45,10 @@ dependencies {
     implementation 'org.yaml:snakeyaml:2.7'
 
     // reqstool dogfooding: @Requirements/@SVCs annotations + processor
-    implementation 'io.github.reqstool:reqstool-java-annotations:1.0.1'
-    annotationProcessor 'io.github.reqstool:reqstool-java-annotations:1.0.1'
-    testImplementation 'io.github.reqstool:reqstool-java-annotations:1.0.1'
-    testAnnotationProcessor 'io.github.reqstool:reqstool-java-annotations:1.0.1'
+    implementation 'io.github.reqstool:reqstool-java-annotations:1.0.2'
+    annotationProcessor 'io.github.reqstool:reqstool-java-annotations:1.0.2'
+    testImplementation 'io.github.reqstool:reqstool-java-annotations:1.0.2'
+    testAnnotationProcessor 'io.github.reqstool:reqstool-java-annotations:1.0.2'
 
     // TestKit runs a real Gradle build, which is the only way to observe a
     // configuration-time circular dependency (see BuildLifecycleWiringTest).
