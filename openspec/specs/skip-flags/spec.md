@@ -12,4 +12,5 @@ reqstool requirement and SVC IDs only; titles and descriptions are injected at r
 The system SHALL implement GRADLE_PLUGIN_003.
 
 #### Scenario: SVC_GRADLE_PLUGIN_003
-The system SHALL pass SVC_GRADLE_PLUGIN_003.
+- **WHEN** SVC_GRADLE_PLUGIN_003 is run
+- **THEN** it passes
