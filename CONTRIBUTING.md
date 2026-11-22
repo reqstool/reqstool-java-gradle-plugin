@@ -6,7 +6,7 @@ For DCO sign-off, commit conventions, and code review process, see the organizat
 
 ## Prerequisites
 
-- Java 21+
+- Java 25+
 - Gradle 9.3+ (use the wrapper)
 - [reqstool](https://github.com/reqstool/reqstool-client) (`pipx install reqstool`)
 - [OpenSpec](https://github.com/Fission-AI/OpenSpec) (`npm install -g @fission-ai/openspec`)

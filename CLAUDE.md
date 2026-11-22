@@ -9,7 +9,7 @@ A Gradle plugin (`io.github.reqstool.gradle-plugin`) for
 `@SVCs` annotations emitted by the reqstool annotation processor during compilation,
 combines them with a dataset (`requirements.yml`, etc.) and test result XML files, and
 packages everything into a `<name>-<version>-reqstool.zip` artifact that the reqstool CLI
-can analyze. Requires Java 21+.
+can analyze. Requires Java 25+.
 
 See `README.md` for the user-facing configuration reference (extension properties, task
 behavior, JUnit 5 parameterized test setup) and `CONTRIBUTING.md` for setup/DCO/commit
