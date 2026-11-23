@@ -40,8 +40,6 @@ jobs:
       ref: ${{ inputs.ref }}
       artifact-name: ${{ inputs.artifact-name || 'dist' }}
       post-test-command: |
-        # Interim: merge the processor's own main/test output the way the plugin's
-        # combineOutput() would (true self-application is not yet wired for Gradle).
         mkdir -p build/reqstool
         {
           echo "# yaml-language-server: \$schema=https://raw.githubusercontent.com/reqstool/reqstool-client/main/src/reqstool/resources/schemas/v1/annotations.schema.json"
@@ -65,7 +63,6 @@ jobs:
   validate-openspec:
     uses: reqstool/.github/.github/workflows/common-validate-openspec.yml@6fc8d3e3d4c3fdf7a83cb7b7a274e4761486ca71 # 1.2.1
 
-  # Single stable required check: survives job renames and matrix changes.
   ci:
     if: ${{ always() }}
     needs: [lint, build, reqstool, smoke, validate-openspec]
