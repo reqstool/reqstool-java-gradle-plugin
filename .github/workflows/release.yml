@@ -12,7 +12,7 @@ on:
         required: false
         type: string
       prerelease:
-        description: "Publish as a release candidate instead of a release: verified like any release, but never promoted to latest. The number is chosen for you (1.1.0 -> 1.1.0-rc1, then the next)."
+        description: "Publish as a release candidate instead of a release: verified like any release, but never marked as latest. The number is chosen for you (1.1.0 -> 1.1.0-rc1, then the next)."
         required: false
         type: choice
         options: [none, rc, b, a]
@@ -92,21 +92,24 @@ jobs:
 
   # Last, deliberately. Everything above can fail, and until this runs nothing
   # resolving "the latest release" can see what was built -- the release is still
-  # a prerelease. Promotion itself is one API call against a release that already
+  # a prerelease. Marking it latest is one API call against a release that already
   # has its artifacts.
   #
   # The guard is `no job failed`, not the default `every job succeeded`: a release
   # candidate deliberately skips the publish jobs that a real release runs, and a
   # skipped dependency would otherwise cascade and skip this too -- leaving the
-  # candidate unpromoted, which is right, and every *real* release unpromoted the
+  # candidate not marked latest, which is right, and every *real* release not marked latest the
   # moment any optional job is skipped, which is not.
   #
   # `!inputs.dry-run` has to be spelled out for the same reason: on a dry run
   # every job above is skipped, and "nothing failed" would otherwise be true.
-  promote:
+  #
+  # `publish-to-plugin-portal` must also have succeeded: a failure upstream leaves it skipped,
+  # not failed, and a skip alone does not trip `no job failed`.
+  finalize:
     needs: [prepare, publish-to-plugin-portal]
-    if: ${{ !inputs.dry-run && !cancelled() && !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled') }}
-    uses: reqstool/.github/.github/workflows/common-release-promote.yml@6340edb1ebc6c9cbeb3f533738ba8f9672a4d313 # 1.2.3
+    if: ${{ !inputs.dry-run && !cancelled() && !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled') && needs.publish-to-plugin-portal.result == 'success' }}
+    uses: reqstool/.github/.github/workflows/common-release-finalize.yml@6340edb1ebc6c9cbeb3f533738ba8f9672a4d313 # 1.2.3
     permissions:
       contents: write
     with:
