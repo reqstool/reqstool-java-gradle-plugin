@@ -103,9 +103,12 @@ jobs:
   #
   # `!inputs.dry-run` has to be spelled out for the same reason: on a dry run
   # every job above is skipped, and "nothing failed" would otherwise be true.
+  #
+  # `publish-to-plugin-portal` must also have succeeded: a failure upstream leaves it skipped,
+  # not failed, and a skip alone does not trip `no job failed`.
   finalize:
     needs: [prepare, publish-to-plugin-portal]
-    if: ${{ !inputs.dry-run && !cancelled() && !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled') }}
+    if: ${{ !inputs.dry-run && !cancelled() && !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled') && needs.publish-to-plugin-portal.result == 'success' }}
     uses: reqstool/.github/.github/workflows/common-release-finalize.yml@6340edb1ebc6c9cbeb3f533738ba8f9672a4d313 # 1.2.3
     permissions:
       contents: write
