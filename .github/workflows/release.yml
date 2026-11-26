@@ -41,7 +41,7 @@ permissions:
 
 jobs:
   prepare:
-    uses: reqstool/.github/.github/workflows/common-release-prepare.yml@91cd368066d5458b5d46bdf34c4d8ca483f6633f # 1.2.2
+    uses: reqstool/.github/.github/workflows/common-release-prepare.yml@6340edb1ebc6c9cbeb3f533738ba8f9672a4d313 # 1.2.3
     permissions:
       contents: read
     with:
@@ -67,7 +67,7 @@ jobs:
   tag:
     needs: [prepare, checks]
     if: ${{ !inputs.dry-run }}
-    uses: reqstool/.github/.github/workflows/common-release-tag.yml@91cd368066d5458b5d46bdf34c4d8ca483f6633f # 1.2.2
+    uses: reqstool/.github/.github/workflows/common-release-tag.yml@6340edb1ebc6c9cbeb3f533738ba8f9672a4d313 # 1.2.3
     permissions:
       contents: write
     with:
@@ -80,7 +80,7 @@ jobs:
   # anything reaches the portal.
   publish-to-plugin-portal:
     needs: [prepare, tag]
-    uses: reqstool/.github/.github/workflows/java-publish-to-gradle.yml@91cd368066d5458b5d46bdf34c4d8ca483f6633f # 1.2.2
+    uses: reqstool/.github/.github/workflows/java-publish-to-gradle.yml@6340edb1ebc6c9cbeb3f533738ba8f9672a4d313 # 1.2.3
     permissions:
       contents: read
     secrets: inherit
@@ -106,7 +106,7 @@ jobs:
   promote:
     needs: [prepare, publish-to-plugin-portal]
     if: ${{ !inputs.dry-run && !cancelled() && !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled') }}
-    uses: reqstool/.github/.github/workflows/common-release-promote.yml@91cd368066d5458b5d46bdf34c4d8ca483f6633f # 1.2.2
+    uses: reqstool/.github/.github/workflows/common-release-promote.yml@6340edb1ebc6c9cbeb3f533738ba8f9672a4d313 # 1.2.3
     permissions:
       contents: write
     with:
